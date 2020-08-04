@@ -6,3 +6,9 @@ fixtures:
     apache:
       repo: "puppetlabs/apache"
       ref: "5.5.0"
+    dhcp:
+      repo: "puppet/dhcp"
+      ref: "4.0.0"
+    stdlib:
+      repo: "puppetlabs/stdlib"
+      ref: "6.3.0"
