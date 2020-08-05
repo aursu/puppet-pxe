@@ -1,6 +1,6 @@
-# @summary A short summary of the purpose of this class
+# @summary Setup httpd core in its minimal setup
 #
-# A description of what this class does
+# Setup httpd core in its minimal setup + CGI
 #
 # @example
 #   include pxe::profile::httpd
