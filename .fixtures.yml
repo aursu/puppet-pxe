@@ -12,3 +12,6 @@ fixtures:
     stdlib:
       repo: "puppetlabs/stdlib"
       ref: "6.3.0"
+    vcsrepo:
+      repo: "puppetlabs/vcsrepo"
+      ref: "3.1.1"
