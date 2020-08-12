@@ -6,7 +6,7 @@ describe Puppet::Type.type(:dhcp_host) do
   it 'check with default parameters list' do
     params = {
       title: 'namevar',
-      catalog: catalog
+      catalog: catalog,
     }
     expect { described_class.new(params) }.not_to raise_error
   end

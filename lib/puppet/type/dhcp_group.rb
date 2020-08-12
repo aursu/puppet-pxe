@@ -1,5 +1,6 @@
 require 'erb'
 require 'ipaddr'
+require 'English'
 
 Puppet::Type.newtype(:dhcp_group) do
   @doc = <<-DOC
@@ -292,7 +293,7 @@ EOF
       name: "dhcp_group_#{title}",
       target: self[:target],
       order: self[:order],
-      content: should_content
+      content: should_content,
     }
 
     metaparams = Puppet::Type.metaparams
@@ -314,6 +315,6 @@ EOF
   def validate_ip(ip)
     IPAddr.new(ip) if ip
   rescue ArgumentError
-    raise Puppet::Error, _('%{ip} is an invalid IP address') % { ip: ip }, $!
+    raise Puppet::Error, _('%{ip} is an invalid IP address') % { ip: ip }, $ERROR_INFO
   end
 end

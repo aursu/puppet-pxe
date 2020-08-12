@@ -8,7 +8,7 @@ describe 'pxe::dhcp' do
       let(:facts) { os_facts }
       let(:params) do
         {
-          next_server: '10.55.156.10'
+          next_server: '10.55.156.10',
         }
       end
 
@@ -25,7 +25,7 @@ describe 'pxe::dhcp' do
         context 'check network interfaces setup when specified' do
           let(:params) do
             super().merge(
-              dhcp_interfaces: %w[eth0 eth1],
+              dhcp_interfaces: ['eth0', 'eth1'],
             )
           end
 
@@ -81,8 +81,8 @@ describe 'pxe::dhcp' do
                 broadcast: '10.55.156.255',
                 routers: '10.55.156.1',
                 domain_name: 'os.domain.tld',
-                nameservers: ['8.8.8.8', '8.8.4.4', '1.1.1.1']
-              }
+                nameservers: ['8.8.8.8', '8.8.4.4', '1.1.1.1'],
+              },
             },
           )
         end

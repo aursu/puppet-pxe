@@ -22,7 +22,7 @@ describe 'pxe::tftp' do
       context 'when tftp server disabled' do
         let(:params) do
           {
-            service_enable: false
+            service_enable: false,
           }
         end
 
@@ -35,7 +35,7 @@ describe 'pxe::tftp' do
       context 'when tftp server disabled' do
         let(:params) do
           {
-            verbose: true
+            verbose: true,
           }
         end
 
