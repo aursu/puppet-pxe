@@ -3,6 +3,8 @@
 require 'spec_helper'
 
 describe 'pxe::profile::pxe' do
+  let(:pre_condition) { "class { 'pxe': }" }
+
   let(:ssh_rsa_id) do
     <<-PRIVATEKEY
 -----BEGIN RSA PRIVATE KEY-----

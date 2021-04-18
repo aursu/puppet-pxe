@@ -12,9 +12,9 @@ Puppet::Functions.create_function(:'pxe::enc_lookup') do
       cmd = "#{external_nodes} #{hostname}"
 
       begin
-          cmdout = Puppet::Util::Execution.execute(cmd)
-          return {} if cmdout.nil?
-          return {} if cmdout.empty?
+        cmdout = Puppet::Util::Execution.execute(cmd)
+        return {} if cmdout.nil?
+        return {} if cmdout.empty?
       rescue Puppet::ExecutionFailure => detail
         Puppet.debug "Execution of #{cmd} command failed: #{detail}"
         return {}

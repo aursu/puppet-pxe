@@ -7,7 +7,7 @@
 define pxe::centos (
   Pxe::Centos_version
           $version  = $name,
-  Enum['x86_64', 'i386']
+  Enum['x86_64', 'i386', 'aarch64']
           $arch     = 'x86_64',
 )
 {
@@ -18,20 +18,23 @@ define pxe::centos (
 
   $storage_directory  = $pxe::params::storage_directory
 
-  $centos6_current_version = $pxe::params::centos6_current_version
+  $centos6_version         = $pxe::params::centos6_version
   $centos7_current_version = $pxe::params::centos7_current_version
   $centos8_current_version = $pxe::params::centos8_current_version
+  $stream_current_version  = $pxe::params::stream_current_version
 
   $real_version = $version ? {
-    '6'     => $centos6_current_version,
-    '7'     => $centos7_current_version,
-    '8'     => $centos8_current_version,
-    default => $version
+    '6'        => $centos6_version,
+    '7'        => $centos7_current_version,
+    '8'        => $centos8_current_version,
+    '8-stream' => $stream_current_version,
+    default    => $version
   }
 
   $major_version = $real_version ? {
     /^6/ => 6,
     /^7/ => 7,
+    # including 8-stream
     /^8/ => 8,
   }
 
@@ -50,13 +53,14 @@ define pxe::centos (
   $distro_base_directory = "${storage_directory}/centos/${real_version}"
 
   case $real_version {
-    $centos6_current_version, $centos7_current_version, $centos8_current_version: {
+    $centos7_current_version, $centos8_current_version, $stream_current_version: {
       $centos_url = "http://mirror.centos.org/centos/${real_version}/${repo_path}"
     }
     default: {
       file { [ $base_directory, $distro_base_directory ]:
         ensure => directory,
       }
+
       $centos_url = "http://vault.centos.org/${version}/${repo_path}"
     }
   }

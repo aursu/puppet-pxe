@@ -54,6 +54,21 @@ describe 'pxe::client_config' do
           }
         end
       end
+
+      context 'with CentOS version 8-stream' do
+        let(:params) do
+          super().merge(
+            osrelease: '8-stream',
+          )
+        end
+
+        it { is_expected.to compile }
+
+        it {
+          is_expected.to contain_file('/var/lib/pxe/namevar.cfg')
+            .with_content(%r{^set kernel='/boot/centos/8-stream/os/x86_64/images/pxeboot/vmlinuz'$})
+        }
+      end
     end
   end
 end

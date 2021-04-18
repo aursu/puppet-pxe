@@ -7,7 +7,8 @@
 class pxe::params {
   $storage_directory = lookup('pxe::params::storage_directory', Stdlib::Unixpath, 'first', '/diskless')
 
-  $centos6_current_version = '6.10'
-  $centos7_current_version = '7.8.2003'
-  $centos8_current_version = '8.2.2004'
+  $centos6_version = '6.10'
+  $centos7_current_version = '7.9.2009'
+  $centos8_current_version = '8.3.2011'
+  $stream_current_version  = '8-stream'
 }

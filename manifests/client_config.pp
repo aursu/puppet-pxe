@@ -32,9 +32,10 @@ define pxe::client_config (
 {
   include pxe::params
 
-  $centos6_current_version = $pxe::params::centos6_current_version
+  $centos6_version = $pxe::params::centos6_version
   $centos7_current_version = $pxe::params::centos7_current_version
   $centos8_current_version = $pxe::params::centos8_current_version
+  $stream_current_version  = $pxe::params::stream_current_version
 
   if $centos {
     if $osrelease {
@@ -43,11 +44,16 @@ define pxe::client_config (
         default             => fail('Illegal value for $osrelease parameter'),
       }
 
-      $major_version = $centos_version ? {
-        /^5/ => 5,
-        /^6/ => 6,
-        /^7/ => 7,
-        /^8/ => 8,
+      if $centos_version == '8-stream' {
+        $major_version = $centos_version
+      }
+      else {
+        $major_version = $centos_version ? {
+          /^5/ => 5,
+          /^6/ => 6,
+          /^7/ => 7,
+          /^8/ => 8,
+        }
       }
     }
     else {
@@ -61,9 +67,11 @@ define pxe::client_config (
     elsif $centos_version {
       $ks_filename = "${centos_version}-${arch}" ? {
         '6-x86_64'                          => 'default-6-x86_64.cfg',
-        "${centos6_current_version}-x86_64" => 'default-6-x86_64.cfg',
+        "${centos6_version}-x86_64"         => 'default-6-x86_64.cfg',
         '8-x86_64'                          => 'default-8-x86_64.cfg',
         "${centos8_current_version}-x86_64" => 'default-8-x86_64.cfg',
+        '8-stream-x86_64'                   => 'default-8-x86_64.cfg',
+        "${stream_current_version}-x86_64"  => 'default-8-x86_64.cfg',
         '7-x86_64'                          => 'default.cfg',
         "${centos7_current_version}-x86_64" => 'default.cfg',
         default                             => "default-${centos_version}-${arch}.cfg",

@@ -16,9 +16,10 @@ class pxe::server (
   Optional[String]
           $puppet_local_config   = undef,
   Boolean $enable                = true,
-  Boolean $centos6_download      = true,
+  Boolean $centos6_download      = false,
   Boolean $centos7_download      = true,
   Boolean $install_puppet5_agent = true,
+  Boolean $centos6_support       = $pxe::centos6_support,
 )
 {
   include pxe::storage
@@ -26,16 +27,12 @@ class pxe::server (
 
   $storage_directory       = $pxe::params::storage_directory
   $centos_version          = $pxe::params::centos7_current_version
-  $centos6_version         = $pxe::params::centos6_current_version
   $centos8_version         = $pxe::params::centos8_current_version
+  $stream_version          = $pxe::params::stream_current_version
   $install_server          = $server_name
 
   if $centos7_download and $enable {
     pxe::centos { $centos_version: }
-  }
-
-  if $centos6_download and $enable {
-    pxe::centos { $centos6_version: }
   }
 
   # Web service
@@ -59,11 +56,6 @@ class pxe::server (
   file{ "${storage_directory}/configs/default.cfg":
     ensure  => file,
     content => template('pxe/default-centos-7-x86_64-ks.cfg.erb'),
-  }
-
-  file{ "${storage_directory}/configs/default-6-x86_64.cfg":
-    ensure  => file,
-    content => template('pxe/default-centos-6-x86_64-ks.cfg.erb'),
   }
 
   file{ "${storage_directory}/configs/default-8-x86_64.cfg":
@@ -101,6 +93,19 @@ class pxe::server (
     ensure  => file,
     content => file('pxe/scripts/update.sh'),
     mode    => '0500',
+  }
+
+  if $centos6_support {
+    $centos6_version = $pxe::params::centos6_version
+
+    if $centos6_download and $enable {
+      pxe::centos { $centos6_version: }
+    }
+
+    file{ "${storage_directory}/configs/default-6-x86_64.cfg":
+      ensure  => file,
+      content => template('pxe/default-centos-6-x86_64-ks.cfg.erb'),
+    }
   }
 
   if $install_puppet5_agent {

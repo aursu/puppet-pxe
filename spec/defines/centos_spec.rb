@@ -3,6 +3,7 @@
 require 'spec_helper'
 
 describe 'pxe::centos' do
+  let(:pre_condition) { "class { 'pxe': }" }
   let(:title) { '7.6.1810' }
   let(:params) do
     {}
@@ -14,7 +15,7 @@ describe 'pxe::centos' do
 
       it { is_expected.to compile }
 
-      ['6', '7', '6.6', '6.9', '6.10', '7.0.1406', '7.4.1708'].each do |centos|
+      ['6', '7', '6.6', '6.9', '6.10', '7.0.1406', '7.4.1708', '8-stream'].each do |centos|
         context "with CentOS version #{centos}" do
           let(:title) { centos }
 
