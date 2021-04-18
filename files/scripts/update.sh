@@ -4,7 +4,7 @@
 # path /diskless/centos
 
 osb="7"
-osv="7.8.2003"
+osv="7.9.2009"
 osa="x86_64"
 
 dst=/diskless/centos/$osv
