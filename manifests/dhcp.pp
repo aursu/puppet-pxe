@@ -76,9 +76,10 @@ class pxe::dhcp (
 
     dhcp::pool { $name:
       * => {
-        gateway => "${dhcp_pool_gateway}", # lint:ignore:only_variable_string
-        options => $option_broadcast_address,
-      } + $dhcp_pool_parameters;
+            gateway => "${dhcp_pool_gateway}", # lint:ignore:only_variable_string
+            options => $option_broadcast_address,
+          } +
+          $dhcp_pool_parameters;
     }
   }
 
