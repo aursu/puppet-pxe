@@ -128,7 +128,7 @@ class pxe::profile::pxe (
   # PXE server structure and assets setup
   #
   # Please notice 'manage_web_user' parameter - it could enable/disable system
-  # users management by class 'httpd' declared inside 'lsys::pxe::server'
+  # users management by class 'httpd' declared inside 'pxe::server'
   class { 'pxe::server':
     enable               => $enable,
     server_name          => $install_server,

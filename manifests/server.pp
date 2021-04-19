@@ -18,7 +18,8 @@ class pxe::server (
   Boolean $enable                = true,
   Boolean $centos6_download      = false,
   Boolean $centos7_download      = true,
-  Boolean $install_puppet5_agent = true,
+  Boolean $install_puppet5_agent = false,
+  Boolean $install_puppet7_agent = false,
   Boolean $centos6_support       = $pxe::centos6_support,
 )
 {
@@ -66,7 +67,7 @@ class pxe::server (
   # CGI trigger for host installation
   file { "${storage_directory}/exec/move.cgi":
     ensure  => file,
-    content => file('pxe/scripts/copy.cgi'),
+    content => file('pxe/scripts/move.cgi'),
     mode    => '0755',
   }
 
@@ -121,7 +122,30 @@ class pxe::server (
     # https://yum.puppetlabs.com/RPM-GPG-KEY-puppet
     file { "${storage_directory}/configs/assets/RPM-GPG-KEY-puppet5-release":
       ensure  => file,
-      content => file('pxe/assets/RPM-GPG-KEY-puppet5-release'),
+      content => file('pxe/assets/RPM-GPG-KEY-puppet'),
+      mode    => '0644',
+    }
+  }
+  elsif $install_puppet7_agent {
+    # install Puppet repository
+    file { "${storage_directory}/configs/assets/puppet7.repo":
+      ensure  => file,
+      content => file('pxe/assets/puppet7.repo'),
+      mode    => '0644',
+    }
+
+    # install Puppet repository GPG key
+    # https://puppet.com/docs/puppet/7.5/install_puppet.html#enable_the_puppet_platform_repository
+    # https://yum.puppetlabs.com/RPM-GPG-KEY-puppet
+    file { "${storage_directory}/configs/assets/RPM-GPG-KEY-puppet7-release":
+      ensure  => file,
+      content => file('pxe/assets/RPM-GPG-KEY-puppet'),
+      mode    => '0644',
+    }
+
+    file { "${storage_directory}/configs/assets/RPM-GPG-KEY-2025-04-06-puppet7-release":
+      ensure  => file,
+      content => file('pxe/assets/RPM-GPG-KEY-2025-04-06-puppet7-release'),
       mode    => '0644',
     }
   }
