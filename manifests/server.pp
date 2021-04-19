@@ -120,7 +120,7 @@ class pxe::server (
     # install Puppet repository GPG key
     # https://puppet.com/docs/puppet/5.5/puppet_platform.html
     # https://yum.puppetlabs.com/RPM-GPG-KEY-puppet
-    file { "${storage_directory}/configs/assets/RPM-GPG-KEY-puppet5-release":
+    file { "${storage_directory}/configs/assets/RPM-GPG-KEY-puppet":
       ensure  => file,
       content => file('pxe/assets/RPM-GPG-KEY-puppet'),
       mode    => '0644',
@@ -137,7 +137,7 @@ class pxe::server (
     # install Puppet repository GPG key
     # https://puppet.com/docs/puppet/7.5/install_puppet.html#enable_the_puppet_platform_repository
     # https://yum.puppetlabs.com/RPM-GPG-KEY-puppet
-    file { "${storage_directory}/configs/assets/RPM-GPG-KEY-puppet7-release":
+    file { "${storage_directory}/configs/assets/RPM-GPG-KEY-puppet":
       ensure  => file,
       content => file('pxe/assets/RPM-GPG-KEY-puppet'),
       mode    => '0644',
