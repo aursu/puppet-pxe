@@ -9,6 +9,8 @@ class pxe::nginx (
           $server_name,
   Array[Stdlib::IP::Address]
           $resolver,
+  Stdlib::Port
+          $proxy_port  = 8080,
 )
 {
   $location_proxy_handler = {
@@ -19,7 +21,7 @@ class pxe::nginx (
     proxy_pass_header => [
       'Server'
     ],
-    proxy             => "http://\$server_addr:8080",  # lint:ignore:variables_not_enclosed
+    proxy             => "http://\$server_addr:${proxy_port}",  # lint:ignore:variables_not_enclosed
   }
 
   nginx::resource::server { 'pxe':
