@@ -70,7 +70,7 @@ if grep -q '200 OK' headers; then
     install -D -m600 data /root/.ssh/authorized_keys
 fi
 
-<% if @install_puppet_agent -%>
+<% if @post_install_puppet_agent -%>
 # install Puppet repository GPG key
 curl <%= @rpm_gpg_key_url %> -Dheaders -odata -s
 if grep -q '200 OK' headers; then

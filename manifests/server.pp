@@ -8,20 +8,20 @@ class pxe::server (
   Stdlib::Fqdn
           $server_name,
   Stdlib::Port
-          $web_port              = 80,
-  Boolean $manage_web_service    = true,
-  Boolean $manage_web_user       = true,
+          $web_port                  = 80,
+  Boolean $manage_web_service        = true,
+  Boolean $manage_web_user           = true,
   Optional[String]
-          $root_authorized_keys  = undef,
+          $root_authorized_keys      = undef,
   Optional[String]
-          $puppet_local_config   = undef,
-  Boolean $enable                = true,
-  Boolean $centos6_download      = false,
-  Boolean $centos7_download      = true,
-  Boolean $install_puppet_agent  = false,
+          $puppet_local_config       = undef,
+  Boolean $enable                    = true,
+  Boolean $centos6_download          = false,
+  Boolean $centos7_download          = true,
+  Boolean $post_install_puppet_agent = false,
   Enum['puppet5', 'puppet7']
-          $puppet_platform       = 'puppet7',
-  Boolean $centos6_support       = $pxe::centos6_support,
+          $puppet_platform           = 'puppet7',
+  Boolean $centos6_support           = $pxe::centos6_support,
 )
 {
   include pxe::storage
@@ -110,7 +110,7 @@ class pxe::server (
     }
   }
 
-  if $install_puppet_agent {
+  if $post_install_puppet_agent {
     # install Puppet repository
     file { "${storage_directory}/configs/assets/${puppet_platform}.repo":
       ensure  => file,
