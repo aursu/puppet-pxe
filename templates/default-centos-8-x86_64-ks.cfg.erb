@@ -71,41 +71,13 @@ curl http://<%= @install_server %>/ks/assets/root.authorized_keys -Dheaders -oda
 if grep -q '200 OK' headers; then
     install -D -m600 data /root/.ssh/authorized_keys
 fi
-<% if @install_puppet5_agent -%>
 
+<% if @install_puppet_agent -%>
 # install Puppet repository GPG key
-# https://puppet.com/docs/puppet/5.5/puppet_platform.html
-# https://yum.puppetlabs.com/RPM-GPG-KEY-puppet
-curl http://<%= @install_server %>/ks/assets/RPM-GPG-KEY-puppet -Dheaders -odata -s
+curl <%= @rpm_gpg_key_url %> -Dheaders -odata -s
 if grep -q '200 OK' headers; then
-    install -D -m644 data /etc/pki/rpm-gpg/RPM-GPG-KEY-puppet5
-    rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-puppet5
-fi
-
-# install Puppet repository
-curl http://<%= @install_server %>/ks/assets/puppet5.repo -Dheaders -odata -s
-if grep -q '200 OK' headers; then
-    install -D -m644 data /etc/yum.repos.d/puppet5.repo
-fi
-
-# install Puppet Agent
-dnf -y install puppet-agent-5.5.22-1.el8
-
-# install Puppet agent config
-curl http://<%= @install_server %>/ks/assets/puppet.conf -Dheaders -odata -s
-if grep -q '200 OK' headers; then
-    install -D -m644 data /etc/puppetlabs/puppet/puppet.conf
-fi
-
-# bootstrap into Puppet
-/opt/puppetlabs/bin/puppet agent --test
-<% elsif @install_puppet7_agent -%>
-
-# install Puppet repository GPG key
-curl http://<%= @install_server %>/ks/assets/RPM-GPG-KEY-puppet -Dheaders -odata -s
-if grep -q '200 OK' headers; then
-    install -D -m644 data /etc/pki/rpm-gpg/RPM-GPG-KEY-puppet7-release
-    rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-puppet7-release
+    install -D -m644 data <%= @rpm_gpg_key_path %>
+    rpm --import <%= @rpm_gpg_key_path %>
 fi
 
 curl http://<%= @install_server %>/ks/assets/RPM-GPG-KEY-2025-04-06-puppet7-release -Dheaders -odata -s
@@ -115,18 +87,18 @@ if grep -q '200 OK' headers; then
 fi
 
 # install Puppet repository
-curl http://<%= @install_server %>/ks/assets/puppet7.repo -Dheaders -odata -s
+curl <%= @puppet_repo_url %> -Dheaders -odata -s
 if grep -q '200 OK' headers; then
-    install -D -m644 data /etc/yum.repos.d/puppet7.repo
+    install -D -m644 data <%= @puppet_repo_path %>
 fi
 
 # install Puppet Agent
-yum -y install puppet-agent-7.5.0-1.el8
+yum -y install puppet-agent-<%= @agent_version %>.el8
 
 # install Puppet agent config
 curl http://<%= @install_server %>/ks/assets/puppet.conf -Dheaders -odata -s
 if grep -q '200 OK' headers; then
-    install -D -m644 data /etc/puppetlabs/puppet/puppet.conf
+  install -D -m644 data /etc/puppetlabs/puppet/puppet.conf
 fi
 
 # bootstrap into Puppet

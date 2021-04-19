@@ -18,8 +18,9 @@ class pxe::server (
   Boolean $enable                = true,
   Boolean $centos6_download      = false,
   Boolean $centos7_download      = true,
-  Boolean $install_puppet5_agent = false,
-  Boolean $install_puppet7_agent = false,
+  Boolean $install_puppet_agent  = false,
+  Enum['puppet5', 'puppet7']
+          $puppet_platform       = 'puppet7',
   Boolean $centos6_support       = $pxe::centos6_support,
 )
 {
@@ -109,28 +110,11 @@ class pxe::server (
     }
   }
 
-  if $install_puppet5_agent {
+  if $install_puppet_agent {
     # install Puppet repository
-    file { "${storage_directory}/configs/assets/puppet5.repo":
+    file { "${storage_directory}/configs/assets/${puppet_platform}.repo":
       ensure  => file,
-      content => file('pxe/assets/puppet5.repo'),
-      mode    => '0644',
-    }
-
-    # install Puppet repository GPG key
-    # https://puppet.com/docs/puppet/5.5/puppet_platform.html
-    # https://yum.puppetlabs.com/RPM-GPG-KEY-puppet
-    file { "${storage_directory}/configs/assets/RPM-GPG-KEY-puppet":
-      ensure  => file,
-      content => file('pxe/assets/RPM-GPG-KEY-puppet'),
-      mode    => '0644',
-    }
-  }
-  elsif $install_puppet7_agent {
-    # install Puppet repository
-    file { "${storage_directory}/configs/assets/puppet7.repo":
-      ensure  => file,
-      content => file('pxe/assets/puppet7.repo'),
+      content => file("pxe/assets/${puppet_platform}.repo"),
       mode    => '0644',
     }
 
@@ -147,6 +131,24 @@ class pxe::server (
       ensure  => file,
       content => file('pxe/assets/RPM-GPG-KEY-2025-04-06-puppet7-release'),
       mode    => '0644',
+    }
+
+    $rpm_gpg_key_url  = "http://${install_server}/ks/assets/RPM-GPG-KEY-puppet"
+    $puppet_repo_url  = "http://${install_server}/ks/assets/${puppet_platform}.repo"
+    $puppet_repo_path = "/etc/yum.repos.d/${puppet_platform}.repo"
+
+    case $puppet_platform {
+      'puppet5': {
+        $agent_version = '5.5.22-1'
+        $rpm_gpg_key_path = '/etc/pki/rpm-gpg/RPM-GPG-KEY-puppet5'
+      }
+      'puppet7': {
+        $agent_version = '7.5.0-1'
+        $rpm_gpg_key_path = '/etc/pki/rpm-gpg/RPM-GPG-KEY-puppet7-release'
+      }
+      default: {
+        fail('Not supported Puppet platform provided')
+      }
     }
   }
 
