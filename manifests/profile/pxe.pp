@@ -92,10 +92,6 @@ class pxe::profile::pxe (
           $puppet_platform           = 'puppet7',
 )
 {
-  Pxe::Client_config {
-    install_server => $install_server,
-  }
-
   # In case if main WEB service is Nginx we should proxy requests from Nginx
   # to Apache using settings in class 'pxe::nginx'
   # It requires to set 'pxe::server::web_port' to 8080
