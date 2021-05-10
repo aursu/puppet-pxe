@@ -19,7 +19,7 @@ class pxe::server (
   Boolean $centos6_download          = false,
   Boolean $centos7_download          = true,
   Boolean $post_install_puppet_agent = false,
-  Enum['puppet5', 'puppet7']
+  Enum['puppet5', 'puppet6', 'puppet7']
           $puppet_platform           = 'puppet7',
   Boolean $centos6_support           = $pxe::centos6_support,
 )
@@ -143,7 +143,7 @@ class pxe::server (
         $rpm_gpg_key_path = '/etc/pki/rpm-gpg/RPM-GPG-KEY-puppet5'
       }
       'puppet7': {
-        $agent_version = '7.5.0-1'
+        $agent_version = '7.6.1-1'
         $rpm_gpg_key_path = '/etc/pki/rpm-gpg/RPM-GPG-KEY-puppet7-release'
       }
       default: {

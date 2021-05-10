@@ -84,8 +84,12 @@ class pxe::profile::pxe (
   Boolean $enable                 = true,
   Optional[String]
           $root_authorized_keys   = undef,
+  # Puppet
   Optional[String]
-          $puppet_local_config    = undef,
+          $puppet_local_config       = undef,
+  Boolean $post_install_puppet_agent = false,
+  Enum['puppet5', 'puppet6', 'puppet7']
+          $puppet_platform           = 'puppet7',
 )
 {
   Pxe::Client_config {
@@ -130,11 +134,13 @@ class pxe::profile::pxe (
   # Please notice 'manage_web_user' parameter - it could enable/disable system
   # users management by class 'httpd' declared inside 'pxe::server'
   class { 'pxe::server':
-    enable               => $enable,
-    server_name          => $install_server,
-    manage_web_user      => $enable,
-    root_authorized_keys => $root_authorized_keys,
-    puppet_local_config  => $puppet_local_config,
+    enable                    => $enable,
+    server_name               => $install_server,
+    manage_web_user           => $enable,
+    root_authorized_keys      => $root_authorized_keys,
+    post_install_puppet_agent => $post_install_puppet_agent,
+    puppet_platform           => $puppet_platform,
+    puppet_local_config       => $puppet_local_config,
   }
 
   # ENC repository setup
