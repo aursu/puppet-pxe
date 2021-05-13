@@ -28,6 +28,7 @@ define pxe::client_config (
   # https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/sec-disabling_consistent_network_device_naming
   # https://www.freedesktop.org/wiki/Software/systemd/PredictableNetworkInterfaceNames/
   Boolean $disable_biosdevname  = true,
+  Boolean $ipxe                 = false,
 )
 {
   include pxe::params
@@ -36,6 +37,10 @@ define pxe::client_config (
   $centos7_current_version = $pxe::params::centos7_current_version
   $centos8_current_version = $pxe::params::centos8_current_version
   $stream_current_version  = $pxe::params::stream_current_version
+
+  $default_centos = $centos7_current_version
+  $default_kernel = "/boot/centos/${default_centos}/os/x86_64/images/pxeboot/vmlinuz"
+  $default_initimg = "/boot/centos/${default_centos}/os/x86_64/images/pxeboot/initrd.img"
 
   if $centos {
     if $osrelease {
@@ -89,7 +94,12 @@ define pxe::client_config (
     $boot_kernel = "/boot/centos/${major_version}/os/${arch}/images/pxeboot/vmlinuz"
   }
   else {
-    $boot_kernel = undef
+    if $ipxe {
+      $boot_kernel = $default_kernel
+    }
+    else {
+      $boot_kernel = undef
+    }
   }
 
   if $initimg {
@@ -99,7 +109,12 @@ define pxe::client_config (
     $boot_initimg = "/boot/centos/${major_version}/os/${arch}/images/pxeboot/initrd.img"
   }
   else {
-    $boot_initimg = undef
+    if $ipxe {
+      $boot_initimg = $default_initimg
+    }
+    else {
+      $boot_initimg = undef
+    }
   }
 
   # TODO: iPXE

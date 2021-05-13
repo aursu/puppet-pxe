@@ -1,3 +1,11 @@
+#set kernel='<%= @default_kernel %>'
+#set initimg='<%= @default_initimg %>'
+<% if @ipxe -%>
+#!ipxe
+kernel http://<%= @install_server %>/<%= @boot_kernel %> ip=dhcp ksdevice= inst.ks=http://<%= @install_server %>/ks/<%= @ks_filename %><% if @disable_biosdevname %> net.ifnames=0 biosdevname=0<% end %>
+initrd http://<%= @install_server %>/<%= @boot_initimg %>
+boot
+<%   else -%>
 <% if @boot_kernel -%>
 set kernel='<%= @boot_kernel %>'
 <% end -%>
@@ -13,4 +21,5 @@ set options='ip=dhcp ksdevice= inst.ks=http://<%= @install_server %>/ks/<%= @ks_
 <%   end -%>
 <% else -%>
 set options='ip=dhcp<% if @disable_biosdevname %> net.ifnames=0 biosdevname=0<% end %>'
+<% end -%>
 <% end -%>
