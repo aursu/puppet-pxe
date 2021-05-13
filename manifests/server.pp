@@ -52,19 +52,6 @@ class pxe::server (
     content => template('pxe/httpd.conf.diskless.erb'),
   }
 
-  # Default asstes
-  # Default kickstart http://<install-server>/ks/default.cfg (CentOS 7 installation)
-  # python -c 'import crypt,getpass;pw=getpass.getpass();print(crypt.crypt(pw) if (pw==getpass.getpass("Confirm: ")) else exit())'
-  file{ "${storage_directory}/configs/default.cfg":
-    ensure  => file,
-    content => template('pxe/default-centos-7-x86_64-ks.cfg.erb'),
-  }
-
-  file{ "${storage_directory}/configs/default-8-x86_64.cfg":
-    ensure  => file,
-    content => template('pxe/default-centos-8-x86_64-ks.cfg.erb'),
-  }
-
   # CGI trigger for host installation
   file { "${storage_directory}/exec/move.cgi":
     ensure  => file,
@@ -95,19 +82,6 @@ class pxe::server (
     ensure  => file,
     content => file('pxe/scripts/update.sh'),
     mode    => '0500',
-  }
-
-  if $centos6_support {
-    $centos6_version = $pxe::params::centos6_version
-
-    if $centos6_download and $enable {
-      pxe::centos { $centos6_version: }
-    }
-
-    file{ "${storage_directory}/configs/default-6-x86_64.cfg":
-      ensure  => file,
-      content => template('pxe/default-centos-6-x86_64-ks.cfg.erb'),
-    }
   }
 
   if $post_install_puppet_agent {
@@ -165,6 +139,32 @@ class pxe::server (
       ensure  => file,
       content => file($puppet_local_config),
       mode    => '0644',
+    }
+  }
+
+  # Default asstes
+  # Default kickstart http://<install-server>/ks/default.cfg (CentOS 7 installation)
+  # python -c 'import crypt,getpass;pw=getpass.getpass();print(crypt.crypt(pw) if (pw==getpass.getpass("Confirm: ")) else exit())'
+  file{ "${storage_directory}/configs/default.cfg":
+    ensure  => file,
+    content => template('pxe/default-centos-7-x86_64-ks.cfg.erb'),
+  }
+
+  file{ "${storage_directory}/configs/default-8-x86_64.cfg":
+    ensure  => file,
+    content => template('pxe/default-centos-8-x86_64-ks.cfg.erb'),
+  }
+
+  if $centos6_support {
+    $centos6_version = $pxe::params::centos6_version
+
+    if $centos6_download and $enable {
+      pxe::centos { $centos6_version: }
+    }
+
+    file{ "${storage_directory}/configs/default-6-x86_64.cfg":
+      ensure  => file,
+      content => template('pxe/default-centos-6-x86_64-ks.cfg.erb'),
     }
   }
 }
