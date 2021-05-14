@@ -48,6 +48,7 @@ class pxe::profile::httpd (
     manage_group           => $manage_group,
     manage_user            => $manage_user,
   }
+  contain apache
 
   class { 'apache::mod::prefork':
     startservers        => '5',
