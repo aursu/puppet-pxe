@@ -40,6 +40,7 @@ class pxe::storage (
       ensure => directory,
     ;
     [ '/var/lib/tftpboot/boot',
+      '/var/lib/tftpboot/boot/grub',
       '/var/lib/tftpboot/boot/centos',
       "/var/lib/tftpboot/boot/centos/${centos7_current_version}",
       "/var/lib/tftpboot/boot/centos/${centos8_current_version}",
