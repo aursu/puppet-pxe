@@ -46,6 +46,9 @@ class pxe::server (
       manage_user  => $manage_web_user,
       enable       => $enable,
     }
+
+    # create apache user before storage setup
+    Class['pxe::profile::httpd'] -> Class['pxe::storage']
   }
 
   apache::custom_config { 'diskless':
