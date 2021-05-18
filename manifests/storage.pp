@@ -6,6 +6,7 @@
 #   include pxe::storage
 class pxe::storage (
   Boolean $centos6_support = $pxe::centos6_support,
+  Boolean $setup_tftp_root = false,
 )
 {
   include apache::params
@@ -32,6 +33,14 @@ class pxe::storage (
     ensure => directory,
     owner  => $user,
     mode   => '0511',
+  }
+
+  # TFTP root directory
+  if $setup_tftp_root {
+    file { '/var/lib/tftpboot':
+      ensure  => directory,
+      mode    => '0711',
+    }
   }
 
   # GRUB configuration
