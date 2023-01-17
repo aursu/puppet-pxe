@@ -42,7 +42,6 @@ class pxe::profile::httpd (
     service_manage         => true,
     service_ensure         => $service_ensure,
     service_enable         => $service_enable,
-    service_restart        => true,
     manage_group           => $manage_group,
     manage_user            => $manage_user,
   }
