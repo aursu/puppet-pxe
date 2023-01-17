@@ -11,8 +11,7 @@ class pxe::profile::httpd (
   Boolean $manage_group = true,
   Boolean $manage_user  = true,
   Boolean $enable       = true,
-)
-{
+) {
   if $enable {
     $service_ensure = 'running'
     $service_enable = true
@@ -23,7 +22,6 @@ class pxe::profile::httpd (
   }
 
   class { 'apache':
-    apache_version         => '2.4',
     mpm_module             => false,
     default_mods           => [],
     use_systemd            => true,
@@ -51,12 +49,12 @@ class pxe::profile::httpd (
   contain apache
 
   class { 'apache::mod::prefork':
-    startservers        => '5',
-    minspareservers     => '5',
-    maxspareservers     => '10',
-    serverlimit         => '256',
-    maxclients          => '256',
-    maxrequestsperchild => '0',
+    startservers        => 5,
+    minspareservers     => 5,
+    maxspareservers     => 10,
+    serverlimit         => 256,
+    maxclients          => 256,
+    maxrequestsperchild => 0,
     notify              => Class['Apache::Service'],
   }
 
@@ -68,8 +66,8 @@ class pxe::profile::httpd (
   class { 'apache::mod::ssl':
     ssl_compression            => false,
     ssl_cipher                 => 'ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384', # lint:ignore:140chars
-    ssl_protocol               => [ 'all', '-SSLv3', '-TLSv1', '-TLSv1.1' ],
-    ssl_random_seed_bytes      => '1024',
+    ssl_protocol               => ['all', '-SSLv3', '-TLSv1', '-TLSv1.1'],
+    ssl_random_seed_bytes      => 1024,
     ssl_mutex                  => 'default',
     ssl_stapling               => true,
     ssl_stapling_return_errors => false,
@@ -77,7 +75,7 @@ class pxe::profile::httpd (
   }
 
   class { 'apache::mod::dir':
-    indexes => [ 'index.html' ],
+    indexes => ['index.html'],
     notify  => Class['Apache::Service'],
   }
 
