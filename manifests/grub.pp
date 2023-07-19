@@ -12,8 +12,7 @@
 #
 class pxe::grub (
   Boolean $enable = true,
-)
-{
+) {
   include pxe::params
   $centos_version = $pxe::params::centos7_current_version
 
@@ -24,7 +23,7 @@ class pxe::grub (
     ;
     'grub2-tools-extra':
     ;
-    [ 'grub2-efi-ia32-modules', 'grub2-pc-modules', 'grub2-efi-x64-modules' ]:
+    ['grub2-efi-ia32-modules', 'grub2-pc-modules', 'grub2-efi-x64-modules']:
       require => Package['grub2-tools-extra'],
     ;
   }

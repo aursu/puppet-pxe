@@ -9,8 +9,7 @@ define pxe::centos (
           $version  = $name,
   Enum['x86_64', 'i386', 'aarch64']
           $arch     = 'x86_64',
-)
-{
+) {
   # TODO: CentOS 8 setup
 
   include pxe::storage
@@ -57,7 +56,7 @@ define pxe::centos (
       $centos_url = "http://mirror.centos.org/centos/${real_version}/${repo_path}"
     }
     default: {
-      file { [ $base_directory, $distro_base_directory ]:
+      file { [$base_directory, $distro_base_directory]:
         ensure => directory,
       }
 

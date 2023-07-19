@@ -19,7 +19,7 @@ class pxe::ipxe {
     ensure => directory,
   }
 
-  [ 'undionly.kpxe', 'ipxe.efi' ].each |$ipxe_file| {
+  ['undionly.kpxe', 'ipxe.efi'].each |$ipxe_file| {
     file { "${ipxe_root}/${ipxe_file}":
       ensure  => file,
       source  => "file:///usr/share/ipxe/${ipxe_file}",

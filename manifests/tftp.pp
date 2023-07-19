@@ -7,8 +7,7 @@
 class pxe::tftp (
   Boolean $service_enable = true,
   Boolean $verbose        = false,
-){
-
+) {
   # Install the xinetd service, that manages the tftpd service
   package { 'xinetd':
     ensure => present,

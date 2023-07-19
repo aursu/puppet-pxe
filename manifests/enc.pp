@@ -9,7 +9,7 @@ class pxe::enc (
   String  $repo_revision  = 'master',
   Optional[Stdlib::Unixpath]
           $repo_identity  = undef,
-){
+) {
   include pxe::storage
 
   vcsrepo { '/var/lib/pxe/enc':

@@ -22,8 +22,7 @@ class pxe::server (
   Enum['puppet5', 'puppet6', 'puppet7']
           $puppet_platform           = 'puppet7',
   Boolean $centos6_support           = $pxe::centos6_support,
-)
-{
+) {
   include pxe::storage
   include pxe::params
 
@@ -148,12 +147,12 @@ class pxe::server (
   # Default asstes
   # Default kickstart http://<install-server>/ks/default.cfg (CentOS 7 installation)
   # python -c 'import crypt,getpass;pw=getpass.getpass();print(crypt.crypt(pw) if (pw==getpass.getpass("Confirm: ")) else exit())'
-  file{ "${storage_directory}/configs/default.cfg":
+  file { "${storage_directory}/configs/default.cfg":
     ensure  => file,
     content => template('pxe/default-centos-7-x86_64-ks.cfg.erb'),
   }
 
-  file{ "${storage_directory}/configs/default-8-x86_64.cfg":
+  file { "${storage_directory}/configs/default-8-x86_64.cfg":
     ensure  => file,
     content => template('pxe/default-centos-8-x86_64-ks.cfg.erb'),
   }
@@ -165,7 +164,7 @@ class pxe::server (
       pxe::centos { $centos6_version: }
     }
 
-    file{ "${storage_directory}/configs/default-6-x86_64.cfg":
+    file { "${storage_directory}/configs/default-6-x86_64.cfg":
       ensure  => file,
       content => template('pxe/default-centos-6-x86_64-ks.cfg.erb'),
     }

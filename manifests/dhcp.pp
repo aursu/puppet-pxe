@@ -30,8 +30,7 @@ class pxe::dhcp (
     Pxe::Dhcp::Subnet
   ]       $default_subnet     = {},
   Boolean  $enable            = true,
-)
-{
+) {
   if $enable {
     $manage_service = true
   }
@@ -70,7 +69,7 @@ class pxe::dhcp (
     $dhcp_pool_parameters     = $parameters - ['broadcast', 'routers']
 
     $option_broadcast_address = $subnet_broadcast_address ? {
-      Stdlib::IP::Address::V4 => [ "broadcast-address ${subnet_broadcast_address}" ],
+      Stdlib::IP::Address::V4 => ["broadcast-address ${subnet_broadcast_address}"],
       default                 => [],
     }
 

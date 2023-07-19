@@ -12,11 +12,21 @@ All notable changes to this project will be documented in this file.
 
 **Known Issues**
 
-## Release 0.1.1
+## Release 0.2.0
 
 **Features**
 
 * Upgraded all dependencies
+
+**Bugfixes**
+
+**Known Issues**
+
+## Release 0.3.0
+
+**Features**
+
+* PDK upgrade to 2.7.1
 
 **Bugfixes**
 

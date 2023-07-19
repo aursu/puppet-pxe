@@ -163,8 +163,7 @@ Puppet::Type.newtype(:dhcp_host) do
         # We always want to use the "first" provider instance we find, unless the resource
         # is already managed and has a different provider set
         if other = provider_instances[instance.name] # rubocop:disable Lint/AssignmentInCondition
-          Puppet.debug  '%s %s found in both %s and %s; skipping the %s version' %
-                        [name.to_s.capitalize, instance.name, other.class.name, instance.class.name, instance.class.name]
+          Puppet.debug "#{name.to_s.capitalize} #{instance.name} found in both #{other.class.name} and #{instance.class.name}; skipping the #{instance.class.name} version"
           next
         end
         provider_instances[instance.name] = instance

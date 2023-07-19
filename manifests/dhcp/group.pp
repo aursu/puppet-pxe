@@ -46,8 +46,7 @@ define pxe::dhcp::group (
     Stdlib::Host,
     Pxe::Dhcp::Host
   ]       $host             = {},
-)
-{
+) {
   include dhcp::params
 
   $dhcp_dir = $dhcp::params::dhcp_dir
