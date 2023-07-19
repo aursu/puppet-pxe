@@ -37,8 +37,8 @@ class pxe::storage (
   # TFTP root directory
   if $setup_tftp_root {
     file { '/var/lib/tftpboot':
-      ensure  => directory,
-      mode    => '0711',
+      ensure => directory,
+      mode   => '0711',
     }
   }
 

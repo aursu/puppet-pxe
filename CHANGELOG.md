@@ -11,3 +11,13 @@ All notable changes to this project will be documented in this file.
 * Fixed compatibility with Puppet httpd module > 9.0.0
 
 **Known Issues**
+
+## Release 0.1.1
+
+**Features**
+
+* Upgraded all dependencies
+
+**Bugfixes**
+
+**Known Issues**
