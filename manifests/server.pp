@@ -5,25 +5,19 @@
 # @example
 #   include pxe::server
 class pxe::server (
-  Stdlib::Fqdn
-          $server_name,
-  Stdlib::Port
-          $web_port                  = 80,
-  Boolean $manage_web_service        = true,
-  Boolean $manage_web_user           = true,
-  Optional[String]
-          $root_authorized_keys      = undef,
-  Optional[String]
-          $puppet_local_config       = undef,
-  Boolean $enable                    = true,
-  Boolean $centos6_download          = false,
-  Boolean $centos7_download          = true,
+  Stdlib::Fqdn $server_name,
+  Stdlib::Port $web_port = 80,
+  Boolean $manage_web_service = true,
+  Boolean $manage_web_user = true,
+  Optional[String] $root_authorized_keys = undef,
+  Optional[String] $puppet_local_config = undef,
+  Boolean $enable = true,
+  Boolean $centos6_download = false,
+  Boolean $centos7_download = true,
   Boolean $post_install_puppet_agent = false,
-  Enum['puppet5', 'puppet6', 'puppet7']
-          $puppet_platform           = 'puppet7',
-  Boolean $centos6_support           = $pxe::centos6_support,
-)
-{
+  Enum['puppet6', 'puppet7', 'puppet8'] $puppet_platform = 'puppet8',
+  Boolean $centos6_support = false,
+) {
   include pxe::storage
   include pxe::params
 
@@ -115,12 +109,8 @@ class pxe::server (
     $puppet_repo_path = "/etc/yum.repos.d/${puppet_platform}.repo"
 
     case $puppet_platform {
-      'puppet5': {
-        $agent_version = '5.5.22-1'
-        $rpm_gpg_key_path = '/etc/pki/rpm-gpg/RPM-GPG-KEY-puppet5'
-      }
       'puppet7': {
-        $agent_version = '7.6.1-1'
+        $agent_version = '7.29.1-1'
         $rpm_gpg_key_path = '/etc/pki/rpm-gpg/RPM-GPG-KEY-puppet7-release'
       }
       default: {
@@ -148,12 +138,12 @@ class pxe::server (
   # Default asstes
   # Default kickstart http://<install-server>/ks/default.cfg (CentOS 7 installation)
   # python -c 'import crypt,getpass;pw=getpass.getpass();print(crypt.crypt(pw) if (pw==getpass.getpass("Confirm: ")) else exit())'
-  file{ "${storage_directory}/configs/default.cfg":
+  file { "${storage_directory}/configs/default.cfg":
     ensure  => file,
     content => template('pxe/default-centos-7-x86_64-ks.cfg.erb'),
   }
 
-  file{ "${storage_directory}/configs/default-8-x86_64.cfg":
+  file { "${storage_directory}/configs/default-8-x86_64.cfg":
     ensure  => file,
     content => template('pxe/default-centos-8-x86_64-ks.cfg.erb'),
   }
@@ -165,7 +155,7 @@ class pxe::server (
       pxe::centos { $centos6_version: }
     }
 
-    file{ "${storage_directory}/configs/default-6-x86_64.cfg":
+    file { "${storage_directory}/configs/default-6-x86_64.cfg":
       ensure  => file,
       content => template('pxe/default-centos-6-x86_64-ks.cfg.erb'),
     }
