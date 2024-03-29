@@ -1,0 +1,8 @@
+<%- if $docroot { -%>
+DocumentRoot <%= $docroot %>
+<Directory "<%= $docroot %>">
+  Options Indexes FollowSymLinks
+  AllowOverride None
+  Require all granted
+</Directory>
+<%- } -%>

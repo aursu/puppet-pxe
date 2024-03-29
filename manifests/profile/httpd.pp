@@ -5,12 +5,11 @@
 # @example
 #   include pxe::profile::httpd
 class pxe::profile::httpd (
-  Stdlib::Port
-          $listen_port  = 80,
-  String  $servername   = 'localhost',
+  Stdlib::Port $listen_port = 80,
+  String  $servername = 'localhost',
   Boolean $manage_group = true,
-  Boolean $manage_user  = true,
-  Boolean $enable       = true,
+  Boolean $manage_user = true,
+  Boolean $enable = true,
 ) {
   if $enable {
     $service_ensure = 'running'
@@ -20,6 +19,8 @@ class pxe::profile::httpd (
     $service_ensure = 'stopped'
     $service_enable = false
   }
+
+  $docroot = '/var/www/html'
 
   class { 'apache':
     mpm_module             => false,
@@ -35,9 +36,9 @@ class pxe::profile::httpd (
     max_keepalive_requests => 100,
     keepalive_timeout      => 5,
     root_directory_secured => true,
-    docroot                => '/var/www/html',
+    docroot                => $docroot,
     default_charset        => 'UTF-8',
-    conf_template          => 'pxe/profile/httpd.conf.erb',
+    conf_template          => 'pxe/profile/httpd.conf.epp',
     mime_types_additional  => undef,
     service_manage         => true,
     service_ensure         => $service_ensure,
@@ -46,6 +47,13 @@ class pxe::profile::httpd (
     manage_user            => $manage_user,
   }
   contain apache
+
+  apache::custom_config { 'docroot':
+    priority => 0,
+    content  => epp('pxe/profile/docroot-httpd.conf.epp', {
+        docroot => $docroot,
+    }),
+  }
 
   class { 'apache::mod::prefork':
     startservers        => 5,
