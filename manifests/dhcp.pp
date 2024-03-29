@@ -6,12 +6,9 @@
 #   include pxe::dhcp
 class pxe::dhcp (
   # PXE server IP address
-  Stdlib::IP::Address::V4
-          $next_server,
-
+  Stdlib::IP::Address::V4 $next_server,
   # instruct DHCP daemon to listen on all available network interfaces
-  Array[String[1]]
-          $dhcp_interfaces    = [],
+  Array[String[1]] $dhcp_interfaces = [],
 
   # installation server could not be authoritative
   # see "authoritative" directive on https://kb.isc.org/docs/isc-dhcp-41-manual-pages-dhcpdconf
@@ -19,19 +16,14 @@ class pxe::dhcp (
 
   # no global (default) DNS servers
   # see "option domain-name-servers" in https://kb.isc.org/docs/isc-dhcp-44-manual-pages-dhcp-options
-  Array[Stdlib::IP::Address::V4]
-          $dhcp_nameservers   = [],
+  Array[Stdlib::IP::Address::V4] $dhcp_nameservers = [],
 
   # ISC DHCP will exit immediately if not declared subnet for at least one
   # listening interface.
   # see "dhcp::pool" defined type from https://github.com/voxpupuli/puppet-dhcp
-  Hash[
-    String,
-    Pxe::Dhcp::Subnet
-  ]       $default_subnet     = {},
-  Boolean  $enable            = true,
-)
-{
+  Hash[String, Pxe::Dhcp::Subnet] $default_subnet = {},
+  Boolean $enable = true,
+) {
   if $enable {
     $manage_service = true
   }
@@ -70,16 +62,16 @@ class pxe::dhcp (
     $dhcp_pool_parameters     = $parameters - ['broadcast', 'routers']
 
     $option_broadcast_address = $subnet_broadcast_address ? {
-      Stdlib::IP::Address::V4 => [ "broadcast-address ${subnet_broadcast_address}" ],
+      Stdlib::IP::Address::V4 => ["broadcast-address ${subnet_broadcast_address}"],
       default                 => [],
     }
 
     dhcp::pool { $name:
       * => {
-            gateway => "${dhcp_pool_gateway}", # lint:ignore:only_variable_string
-            options => $option_broadcast_address,
-          } +
-          $dhcp_pool_parameters;
+        gateway => "${dhcp_pool_gateway}", # lint:ignore:only_variable_string
+        options => $option_broadcast_address,
+      } +
+      $dhcp_pool_parameters;
     }
   }
 

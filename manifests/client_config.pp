@@ -29,8 +29,7 @@ define pxe::client_config (
   # https://www.freedesktop.org/wiki/Software/systemd/PredictableNetworkInterfaceNames/
   Boolean $disable_biosdevname  = true,
   Boolean $ipxe                 = false,
-)
-{
+) {
   include pxe::params
 
   $centos6_version = $pxe::params::centos6_version

@@ -6,6 +6,4 @@
 #   include pxe
 class pxe (
   Boolean $centos6_support = false,
-)
-{
-}
+) {}
