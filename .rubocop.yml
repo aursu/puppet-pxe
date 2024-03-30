@@ -463,6 +463,8 @@ Style/RedundantSort:
   Enabled: false
 Style/RescueStandardError:
   Enabled: false
+Style/SafeNavigation:
+  Enabled: false
 Style/SingleArgumentDig:
   Enabled: false
 Style/SlicingWithRange:

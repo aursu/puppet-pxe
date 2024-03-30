@@ -221,7 +221,7 @@ Puppet::Type.type(:dhcp_host).provide(:ruby, parent: Puppet::Provider) do
     #   mac1: xx:xx:xx:xx:xx:xx
     #   ip1: XX.XX.XX.XX
     #   group1: vlanXXX
-    (0..9).each do |i|
+    10.times do |i|
       idx = (i > 0) ? i : nil
 
       # first pair by default is PXE interface if not specified otherwise
