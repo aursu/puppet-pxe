@@ -14,7 +14,7 @@ fixtures:
       ref: "9.0.0"
     dhcp:
       repo: "puppet/dhcp"
-      ref: "4.0.0"
+      ref: "6.1.0"
     nginx:
       repo: "aursu/nginx"
       ref: "4.4.2"
