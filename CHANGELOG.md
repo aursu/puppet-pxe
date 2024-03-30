@@ -11,3 +11,18 @@ All notable changes to this project will be documented in this file.
 * Fixed compatibility with Puppet httpd module > 9.0.0
 
 **Known Issues**
+
+## Release 0.2.0
+
+**Features**
+
+* Removed support for CentOS 6 and CentOS 8
+* Added support for CentOS Stream 8 and CentOS Stream 9
+
+**Bugfixes**
+
+* Fixed compatibility with Puppet httpd module >= 11.0.0
+
+**Known Issues**
+
+* Removed compatibility with Puppet httpd module < 11.0.0

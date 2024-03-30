@@ -10,6 +10,7 @@ class pxe::profile::httpd (
   Boolean $manage_group = true,
   Boolean $manage_user = true,
   Boolean $enable = true,
+  String  $conf_template = 'pxe/profile/httpd.conf.epp',
 ) {
   if $enable {
     $service_ensure = 'running'
@@ -38,7 +39,7 @@ class pxe::profile::httpd (
     root_directory_secured => true,
     docroot                => $docroot,
     default_charset        => 'UTF-8',
-    conf_template          => 'pxe/profile/httpd.conf.epp',
+    conf_template          => $conf_template,
     mime_types_additional  => undef,
     service_manage         => true,
     service_ensure         => $service_ensure,
@@ -48,11 +49,14 @@ class pxe::profile::httpd (
   }
   contain apache
 
-  apache::custom_config { 'docroot':
-    priority => 0,
-    content  => epp('pxe/profile/docroot-httpd.conf.epp', {
-        docroot => $docroot,
-    }),
+  # if `apache` module >= 11 
+  if defined('$apache::parameters') {
+    apache::custom_config { 'docroot':
+      priority => '00',
+      content  => epp('pxe/profile/docroot-httpd.conf.epp', {
+          docroot => $docroot,
+      }),
+    }
   }
 
   class { 'apache::mod::prefork':

@@ -5,7 +5,7 @@ fixtures:
   forge_modules:
     apache:
       repo: "puppetlabs/apache"
-      ref: "9.0.1"
+      ref: "12.0.3"
     archive:
       repo: "puppet/archive"
       ref: "4.5.0"

@@ -21,9 +21,9 @@ AccessFileName .htaccess
 <Directory />
   Options <%= Array($root_directory_options).join(' ') %>
   AllowOverride None
-<%- if $root_directory_secured { -%>
+<% if $root_directory_secured { -%>
   Require all denied
-<%- } -%>
+<% } -%>
 </Directory>
 
 <% if $default_charset { -%>
