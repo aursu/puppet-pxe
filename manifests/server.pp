@@ -21,11 +21,12 @@ class pxe::server (
   include pxe::storage
   include pxe::params
 
-  $storage_directory       = $pxe::params::storage_directory
-  $centos_version          = $pxe::params::centos7_current_version
-  $stream8_version         = $pxe::params::stream8_current_version
-  $stream9_version         = $pxe::params::stream9_current_version
-  $install_server          = $server_name
+  $storage_directory = $pxe::params::storage_directory
+  $centos_version    = $pxe::params::centos7_current_version
+  $stream8_version   = $pxe::params::stream8_current_version
+  $centos8_version   = $stream8_version
+  $stream9_version   = $pxe::params::stream9_current_version
+  $install_server    = $server_name
 
   if $centos7_download and $enable {
     pxe::centos { $centos_version: }
