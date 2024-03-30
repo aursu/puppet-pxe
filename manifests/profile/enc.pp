@@ -12,8 +12,7 @@ class pxe::profile::enc (
   String $repo_source,
   String $repo_identity,
   String $repo_branch = 'enc',
-)
-{
+) {
   openssh::priv_key { 'enc-e39b7d4':
     user_name  => 'root',
     key_data   => $repo_identity,

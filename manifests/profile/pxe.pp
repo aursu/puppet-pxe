@@ -70,28 +70,20 @@
 #   }
 #
 class pxe::profile::pxe (
-  Stdlib::Fqdn
-          $install_server,
-  Stdlib::IP::Address
-          $install_server_address,
-  Array[Stdlib::IP::Address]
-          $resolver,
-  Hash[String, Pxe::Dhcp::Subnet]
-          $dhcp_default_subnet,
+  Stdlib::Fqdn $install_server,
+  Stdlib::IP::Address $install_server_address,
+  Array[Stdlib::IP::Address] $resolver,
+  Hash[String, Pxe::Dhcp::Subnet] $dhcp_default_subnet,
   String  $enc_repo_source,
   String  $enc_repo_identity,
-  String  $enc_repo_branch        = 'enc',
-  Boolean $enable                 = true,
-  Optional[String]
-          $root_authorized_keys   = undef,
+  String  $enc_repo_branch = 'enc',
+  Boolean $enable = true,
+  Optional[String] $root_authorized_keys = undef,
   # Puppet
-  Optional[String]
-          $puppet_local_config       = undef,
+  Optional[String] $puppet_local_config = undef,
   Boolean $post_install_puppet_agent = false,
-  Enum['puppet5', 'puppet6', 'puppet7']
-          $puppet_platform           = 'puppet7',
-)
-{
+  Enum['puppet6', 'puppet7', 'puppet8'] $puppet_platform = 'puppet7',
+) {
   # In case if main WEB service is Nginx we should proxy requests from Nginx
   # to Apache using settings in class 'pxe::nginx'
   # It requires to set 'pxe::server::web_port' to 8080
