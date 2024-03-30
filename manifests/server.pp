@@ -15,7 +15,7 @@ class pxe::server (
   Boolean $centos6_download = false,
   Boolean $centos7_download = true,
   Boolean $post_install_puppet_agent = false,
-  Enum['puppet6', 'puppet7', 'puppet8'] $puppet_platform = 'puppet8',
+  Enum['puppet6', 'puppet7', 'puppet8'] $puppet_platform = 'puppet7',
   Boolean $centos6_support = false,
 ) {
   include pxe::storage
@@ -23,8 +23,8 @@ class pxe::server (
 
   $storage_directory       = $pxe::params::storage_directory
   $centos_version          = $pxe::params::centos7_current_version
-  $centos8_version         = $pxe::params::centos8_current_version
-  $stream_version          = $pxe::params::stream_current_version
+  $stream8_version         = $pxe::params::stream8_current_version
+  $stream9_version         = $pxe::params::stream9_current_version
   $install_server          = $server_name
 
   if $centos7_download and $enable {
@@ -113,6 +113,7 @@ class pxe::server (
         $agent_version = '7.29.1-1'
         $rpm_gpg_key_path = '/etc/pki/rpm-gpg/RPM-GPG-KEY-puppet7-release'
       }
+      # TODO: Puppet 8
       default: {
         fail('Not supported Puppet platform provided')
       }
@@ -146,18 +147,5 @@ class pxe::server (
   file { "${storage_directory}/configs/default-8-x86_64.cfg":
     ensure  => file,
     content => template('pxe/default-centos-8-x86_64-ks.cfg.erb'),
-  }
-
-  if $centos6_support {
-    $centos6_version = $pxe::params::centos6_version
-
-    if $centos6_download and $enable {
-      pxe::centos { $centos6_version: }
-    }
-
-    file { "${storage_directory}/configs/default-6-x86_64.cfg":
-      ensure  => file,
-      content => template('pxe/default-centos-6-x86_64-ks.cfg.erb'),
-    }
   }
 }

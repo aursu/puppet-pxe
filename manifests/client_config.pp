@@ -6,36 +6,27 @@
 #   pxe::client_config { 'namevar': }
 define pxe::client_config (
   # https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/installation_guide/sect-kickstart-howto
-  Stdlib::Fqdn
-          $install_server,
-  Stdlib::Fqdn
-          $hostname             = $name,
-  Optional[Stdlib::Unixpath]
-          $kernel               = undef,
-  Optional[Stdlib::Unixpath]
-          $initimg              = undef,
-  Enum['x86_64', 'i386']
-          $arch                 = 'x86_64',
-  Optional[String]
-          $autofile             = undef,
-  Optional[String]
-          $osrelease            = undef,
+  Stdlib::Fqdn $install_server,
+  Stdlib::Fqdn $hostname = $name,
+  Optional[Stdlib::Unixpath] $kernel = undef,
+  Optional[Stdlib::Unixpath] $initimg = undef,
+  Enum['x86_64', 'i386'] $arch = 'x86_64',
+  Optional[String] $autofile = undef,
+  Optional[String] $osrelease = undef,
   # Only applicable to CentOS 6 systems
-  Optional[String]
-          $interface            = 'eth0',
+  Optional[String] $interface = 'eth0',
   # Kickstart settings
-  Boolean $centos               = true,
+  Boolean $centos = true,
   # https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/sec-disabling_consistent_network_device_naming
   # https://www.freedesktop.org/wiki/Software/systemd/PredictableNetworkInterfaceNames/
-  Boolean $disable_biosdevname  = true,
-  Boolean $ipxe                 = false,
+  Boolean $disable_biosdevname = true,
+  Boolean $ipxe = false,
 ) {
   include pxe::params
 
-  $centos6_version = $pxe::params::centos6_version
   $centos7_current_version = $pxe::params::centos7_current_version
-  $centos8_current_version = $pxe::params::centos8_current_version
-  $stream_current_version  = $pxe::params::stream_current_version
+  $stream8_current_version  = $pxe::params::stream8_current_version
+  $stream9_current_version  = $pxe::params::stream9_current_version
 
   $default_centos = $centos7_current_version
   $default_kernel = "/boot/centos/${default_centos}/os/x86_64/images/pxeboot/vmlinuz"
@@ -48,15 +39,16 @@ define pxe::client_config (
         default             => fail('Illegal value for $osrelease parameter'),
       }
 
-      if $centos_version == '8-stream' {
-        $major_version = $centos_version
-      }
-      else {
-        $major_version = $centos_version ? {
-          /^5/ => 5,
-          /^6/ => 6,
-          /^7/ => 7,
-          /^8/ => 8,
+      case $centos_version {
+        '8-stream', '9-stream': {
+          $major_version = $centos_version
+        }
+        default: {
+          $major_version = $centos_version ? {
+            /^7/ => 7,
+            /^8/ => 8,
+            /^9/ => 9,
+          }
         }
       }
     }
@@ -70,12 +62,10 @@ define pxe::client_config (
     }
     elsif $centos_version {
       $ks_filename = "${centos_version}-${arch}" ? {
-        '6-x86_64'                          => 'default-6-x86_64.cfg',
-        "${centos6_version}-x86_64"         => 'default-6-x86_64.cfg',
         '8-x86_64'                          => 'default-8-x86_64.cfg',
-        "${centos8_current_version}-x86_64" => 'default-8-x86_64.cfg',
         '8-stream-x86_64'                   => 'default-8-x86_64.cfg',
-        "${stream_current_version}-x86_64"  => 'default-8-x86_64.cfg',
+        '9-x86_64'                          => 'default-9-x86_64.cfg',
+        '9-stream-x86_64'                   => 'default-9-x86_64.cfg',
         '7-x86_64'                          => 'default.cfg',
         "${centos7_current_version}-x86_64" => 'default.cfg',
         default                             => "default-${centos_version}-${arch}.cfg",

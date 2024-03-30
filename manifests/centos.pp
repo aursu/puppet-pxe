@@ -5,12 +5,9 @@
 # @example
 #   pxe::centos { 'namevar': }
 define pxe::centos (
-  Pxe::Centos_version
-          $version  = $name,
-  Enum['x86_64', 'i386', 'aarch64']
-          $arch     = 'x86_64',
-)
-{
+  Pxe::Centos_version $version = $name,
+  Enum['x86_64', 'i386', 'aarch64'] $arch = 'x86_64',
+) {
   # TODO: CentOS 8 setup
 
   include pxe::storage
@@ -18,24 +15,23 @@ define pxe::centos (
 
   $storage_directory  = $pxe::params::storage_directory
 
-  $centos6_version         = $pxe::params::centos6_version
   $centos7_current_version = $pxe::params::centos7_current_version
-  $centos8_current_version = $pxe::params::centos8_current_version
-  $stream_current_version  = $pxe::params::stream_current_version
+  $stream8_current_version = $pxe::params::stream8_current_version
+  $stream9_current_version = $pxe::params::stream9_current_version
 
   $real_version = $version ? {
-    '6'        => $centos6_version,
-    '7'        => $centos7_current_version,
-    '8'        => $centos8_current_version,
-    '8-stream' => $stream_current_version,
-    default    => $version
+    '7'     => $centos7_current_version,
+    /^8/    => $stream8_current_version,
+    /^9/    => $stream9_current_version,
+    default => $version
   }
 
   $major_version = $real_version ? {
-    /^6/ => 6,
     /^7/ => 7,
     # including 8-stream
     /^8/ => 8,
+    # including 9-stream
+    /^9/ => 9,
   }
 
   if $major_version > 7 {
@@ -53,11 +49,14 @@ define pxe::centos (
   $distro_base_directory = "${storage_directory}/centos/${real_version}"
 
   case $real_version {
-    $centos7_current_version, $centos8_current_version, $stream_current_version: {
+    $centos7_current_version, $stream8_current_version: {
       $centos_url = "http://mirror.centos.org/centos/${real_version}/${repo_path}"
     }
+    $stream9_current_version: {
+      $centos_url = "http://mirror.stream.centos.org/${real_version}/${repo_path}"
+    }
     default: {
-      file { [ $base_directory, $distro_base_directory ]:
+      file { [$base_directory, $distro_base_directory]:
         ensure => directory,
       }
 
@@ -73,15 +72,15 @@ define pxe::centos (
   $distro_repo_directory = "${distro_base_directory}/${repo_path}"
 
   file { [
-    "${base_directory}/${repo}",
-    $arch_directory,
-    $repo_directory,
-    $images_directory,
-    $pxeboot_directory,
-    "${distro_base_directory}/${repo}",
-    $distro_arch_directory,
+      "${base_directory}/${repo}",
+      $arch_directory,
+      $repo_directory,
+      $images_directory,
+      $pxeboot_directory,
+      "${distro_base_directory}/${repo}",
+      $distro_arch_directory,
     $distro_repo_directory].unique: # lint:ignore:unquoted_resource_title
-    ensure => directory,
+      ensure => directory,
   }
 
   archive { "${pxeboot_directory}/vmlinuz":
