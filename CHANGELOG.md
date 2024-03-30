@@ -46,3 +46,13 @@ All notable changes to this project will be documented in this file.
 **Known Issues**
 
 * Removed compatibility with Puppet httpd module < 11.0.0
+
+## Release 0.5.0
+
+**Features**
+
+* PDK upgrade to 3.0.0
+
+**Bugfixes**
+
+**Known Issues**
