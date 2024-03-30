@@ -16,6 +16,26 @@ All notable changes to this project will be documented in this file.
 
 **Features**
 
+* Upgraded all dependencies
+
+**Bugfixes**
+
+**Known Issues**
+
+## Release 0.3.0
+
+**Features**
+
+* PDK upgrade to 2.7.1
+
+**Bugfixes**
+
+**Known Issues**
+
+## Release 0.4.0
+
+**Features**
+
 * Removed support for CentOS 6 and CentOS 8
 * Added support for CentOS Stream 8 and CentOS Stream 9
 

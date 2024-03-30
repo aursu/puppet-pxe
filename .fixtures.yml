@@ -11,20 +11,20 @@ fixtures:
       ref: "4.5.0"
     concat:
       repo: "puppetlabs/concat"
-      ref: "6.2.0"
+      ref: "9.0.0"
     dhcp:
       repo: "puppet/dhcp"
       ref: "4.0.0"
     stdlib:
       repo: "puppetlabs/stdlib"
-      ref: "6.3.0"
+      ref: "9.2.0"
     vcsrepo:
       repo: "puppetlabs/vcsrepo"
-      ref: "3.1.1"
+      ref: "6.1.0"
   repositories:
     nginx:
       repo: "https://github.com/aursu/puppet-nginx.git"
-      ref: "tags/v1.1.1-rc0.5"
+      ref: "tags/v4.4.1-rc0.2"
     openssh: "https://github.com/aursu/puppet-openssh.git"
     yumrepo_core:
       repo: https://github.com/puppetlabs/puppetlabs-yumrepo_core.git

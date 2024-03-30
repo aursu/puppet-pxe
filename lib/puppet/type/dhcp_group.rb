@@ -96,7 +96,7 @@ Puppet::Type.newtype(:dhcp_group) do
 
     validate do |val|
       raise Puppet::ParseError, _(':order is not a string or integer.') unless val.is_a?(String) || val.is_a?(Integer)
-      raise Puppet::ParseError, _(':order is not a numerical value') unless val.to_s =~ %r{[0-9]+}
+      raise Puppet::ParseError, _(':order is not a numerical value') unless val.to_s.match?(%r{[0-9]+})
     end
   end
 

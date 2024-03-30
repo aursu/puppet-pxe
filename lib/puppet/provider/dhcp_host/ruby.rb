@@ -126,7 +126,7 @@ Puppet::Type.type(:dhcp_host).provide(:ruby, parent: Puppet::Provider) do
           host[:ip] = ip
         elsif %r{^option host-name "(?<hostname>\S+)";$} =~ line
           host[:hostname] = hostname
-        elsif %r{^\}$} =~ line
+        elsif line.match?(%r{^\}$})
           # hostname is more preferable then host declaration name
           hostname = host[:hostname] || host[:name]
           # store host record
