@@ -1,6 +1,7 @@
 require 'erb'
 require 'ipaddr'
 require 'English'
+require 'puppet/parameter/boolean'
 
 Puppet::Type.newtype(:dhcp_group) do
   @doc = <<-DOC
