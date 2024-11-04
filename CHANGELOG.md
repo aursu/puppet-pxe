@@ -57,7 +57,7 @@ All notable changes to this project will be documented in this file.
 
 **Known Issues**
 
-## Release 0.5.1
+## Release 0.5.2
 
 **Features**
 
@@ -66,3 +66,5 @@ All notable changes to this project will be documented in this file.
 * Fixed default kickstart config for CentOS 8
 
 **Known Issues**
+
+* Added missed require
