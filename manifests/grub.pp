@@ -14,7 +14,6 @@ class pxe::grub (
   Boolean $enable = true,
 ) {
   include pxe::params
-  $centos_version = $pxe::params::centos7_current_version
 
   # GRUB2 Modules installation
   package {
@@ -40,7 +39,7 @@ class pxe::grub (
       path    => '/usr/bin:/bin',
       creates => '/var/lib/tftpboot/boot/grub/i386-pc/core.0',
       require => Package['grub2-pc-modules'],
-      before  => File['/var/lib/tftpboot/boot/grub/grub.cfg']
+      before  => File['/var/lib/tftpboot/boot/grub/grub.cfg'],
     }
 
     exec { 'grub2-mknetdir --net-directory=/var/lib/tftpboot --subdir=boot/grub -d /usr/lib/grub/i386-efi':
@@ -76,8 +75,9 @@ class pxe::grub (
   # cat boot/grub/i386-pc/grub.cfg
   # source boot/grub/grub.cfg
 
-  $default_kernel = "/boot/centos/${centos_version}/os/x86_64/images/pxeboot/vmlinuz"
-  $default_initimg = "/boot/centos/${centos_version}/os/x86_64/images/pxeboot/initrd.img"
+  # TODO: move accent to CentOS Stream 10 or Rocky Linux 9
+  $default_kernel = '/boot/centos/7/os/x86_64/images/pxeboot/vmlinuz'
+  $default_initimg = '/boot/centos/7/os/x86_64/images/pxeboot/initrd.img'
 
   file { '/var/lib/tftpboot/boot/grub/grub.cfg':
     ensure  => file,

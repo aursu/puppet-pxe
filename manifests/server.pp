@@ -12,25 +12,18 @@ class pxe::server (
   Optional[String] $root_authorized_keys = undef,
   Optional[String] $puppet_local_config = undef,
   Boolean $enable = true,
-  Boolean $centos6_download = false,
-  Boolean $centos7_download = true,
+  Boolean $rocky8_download = false,
+  Boolean $rocky9_download = true,
   Boolean $post_install_puppet_agent = false,
-  Enum['puppet6', 'puppet7', 'puppet8'] $puppet_platform = 'puppet7',
-  Boolean $centos6_support = false,
+  Enum['puppet7', 'puppet8'] $puppet_platform = 'puppet8',
 ) {
   include pxe::storage
   include pxe::params
 
   $storage_directory = $pxe::params::storage_directory
-  $centos_version    = $pxe::params::centos7_current_version
-  $stream8_version   = $pxe::params::stream8_current_version
-  $centos8_version   = $stream8_version
+
   $stream9_version   = $pxe::params::stream9_current_version
   $install_server    = $server_name
-
-  if $centos7_download and $enable {
-    pxe::centos { $centos_version: }
-  }
 
   # Web service
   if $manage_web_service {
@@ -69,18 +62,18 @@ class pxe::server (
   }
 
   # repository installation script
-  file { '/root/bin/install-7-x86_64.sh':
-    ensure  => file,
-    content => file('pxe/scripts/install.sh'),
-    mode    => '0500',
-  }
+  # file { '/root/bin/install-7-x86_64.sh':
+  #   ensure  => file,
+  #   content => file('pxe/scripts/install.sh'),
+  #   mode    => '0500',
+  # }
 
   # repository update script (including EPEL and rpmforge)
-  file { '/root/bin/update-7-x86_64.sh':
-    ensure  => file,
-    content => file('pxe/scripts/update.sh'),
-    mode    => '0500',
-  }
+  # file { '/root/bin/update-7-x86_64.sh':
+  #   ensure  => file,
+  #   content => file('pxe/scripts/update.sh'),
+  #   mode    => '0500',
+  # }
 
   if $post_install_puppet_agent {
     # install Puppet repository

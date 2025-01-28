@@ -15,17 +15,18 @@ class pxe::storage (
 
   $storage_directory  = $pxe::params::storage_directory
 
-  $centos7_current_version = $pxe::params::centos7_current_version
-  $stream8_current_version = $pxe::params::stream8_current_version
   $stream9_current_version = $pxe::params::stream9_current_version
+  $rocky8_current_version = $pxe::params::rocky8_current_version
+  $rocky9_current_version = $pxe::params::rocky9_current_version
 
   # Storage
   file { [
       $storage_directory,
       "${storage_directory}/centos",
-      "${storage_directory}/centos/${centos7_current_version}",
-      "${storage_directory}/centos/${stream8_current_version}",
       "${storage_directory}/centos/${stream9_current_version}",
+      "${storage_directory}/rocky",
+      "${storage_directory}/rocky/${rocky8_current_version}",
+      "${storage_directory}/rocky/${rocky9_current_version}",
       "${storage_directory}/configs",
       "${storage_directory}/configs/assets",
     "${storage_directory}/exec"]:
@@ -50,27 +51,16 @@ class pxe::storage (
     ['/var/lib/tftpboot/boot',
       '/var/lib/tftpboot/boot/grub',
       '/var/lib/tftpboot/boot/centos',
-      "/var/lib/tftpboot/boot/centos/${centos7_current_version}",
-      "/var/lib/tftpboot/boot/centos/${stream8_current_version}",
-    "/var/lib/tftpboot/boot/centos/${stream9_current_version}"]:
+      "/var/lib/tftpboot/boot/centos/${stream9_current_version}",
+      '/var/lib/tftpboot/boot/rocky',
+      "/var/lib/tftpboot/boot/rocky/${rocky8_current_version}",
+    "/var/lib/tftpboot/boot/rocky/${rocky9_current_version}"]:
       mode => '0711',
       ;
     ['/var/lib/tftpboot/boot/install', '/var/lib/pxe']:
       owner => $user,
       mode  => '0751',
       ;
-  }
-
-  file { ['/var/lib/tftpboot/boot/centos/7', "${storage_directory}/centos/7"]:
-    ensure => link,
-    target => $centos7_current_version,
-  }
-
-  unless $stream8_current_version == '8-stream' {
-    file { ['/var/lib/tftpboot/boot/centos/8-stream', "${storage_directory}/centos/8-stream"]:
-      ensure => link,
-      target => $stream8_current_version,
-    }
   }
 
   unless $stream9_current_version == '9-stream' {

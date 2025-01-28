@@ -5,25 +5,31 @@ fixtures:
   forge_modules:
     apache:
       repo: "puppetlabs/apache"
-      ref: "12.0.3"
+      ref: "12.2.0"
+    apt:
+      repo: puppetlabs/apt
+      ref: 9.4.0
     archive:
       repo: "puppet/archive"
       ref: "7.1.0"
+    bsys:
+      repo: aursu/bsys
+      ref: 0.8.0
     concat:
       repo: "puppetlabs/concat"
-      ref: "9.0.0"
+      ref: "9.1.0"
     dhcp:
       repo: "puppet/dhcp"
       ref: "6.1.0"
     nginx:
       repo: "aursu/nginx"
-      ref: "4.4.2"
+      ref: "6.0.2"
     openssh:
       repo: "aursu/openssh"
-      ref: "0.9.5"
+      ref: "0.9.6"
     stdlib:
       repo: "puppetlabs/stdlib"
-      ref: "9.2.0"
+      ref: "9.7.0"
     vcsrepo:
       repo: "puppetlabs/vcsrepo"
       ref: "6.1.0"

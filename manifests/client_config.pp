@@ -24,13 +24,9 @@ define pxe::client_config (
 ) {
   include pxe::params
 
-  $centos7_current_version = $pxe::params::centos7_current_version
-  $stream8_current_version  = $pxe::params::stream8_current_version
-  $stream9_current_version  = $pxe::params::stream9_current_version
-
-  $default_centos = $centos7_current_version
-  $default_kernel = "/boot/centos/${default_centos}/os/x86_64/images/pxeboot/vmlinuz"
-  $default_initimg = "/boot/centos/${default_centos}/os/x86_64/images/pxeboot/initrd.img"
+  # TODO: move accent to CentOS Stream 10 or Rocky Linux 9
+  $default_kernel = '/boot/centos/7/os/x86_64/images/pxeboot/vmlinuz'
+  $default_initimg = '/boot/centos/7/os/x86_64/images/pxeboot/initrd.img'
 
   if $centos {
     if $osrelease {
@@ -40,13 +36,12 @@ define pxe::client_config (
       }
 
       case $centos_version {
-        '8-stream', '9-stream': {
+        '9-stream', '10-stream': {
           $major_version = $centos_version
         }
         default: {
           $major_version = $centos_version ? {
-            /^7/ => 7,
-            /^8/ => 8,
+            /^10/ => 10,
             /^9/ => 9,
           }
         }
@@ -62,13 +57,11 @@ define pxe::client_config (
     }
     elsif $centos_version {
       $ks_filename = "${centos_version}-${arch}" ? {
-        '8-x86_64'                          => 'default-8-x86_64.cfg',
-        '8-stream-x86_64'                   => 'default-8-x86_64.cfg',
-        '9-x86_64'                          => 'default-9-x86_64.cfg',
-        '9-stream-x86_64'                   => 'default-9-x86_64.cfg',
-        '7-x86_64'                          => 'default.cfg',
-        "${centos7_current_version}-x86_64" => 'default.cfg',
-        default                             => "default-${centos_version}-${arch}.cfg",
+        '10-x86_64'        => 'default.cfg',
+        '10-stream-x86_64' => 'default.cfg',
+        '9-x86_64'         => 'default-9-x86_64.cfg',
+        '9-stream-x86_64'  => 'default-9-x86_64.cfg',
+        default            => "default-${centos_version}-${arch}.cfg",
       }
     }
     else {
@@ -108,8 +101,8 @@ define pxe::client_config (
 
   # TODO: iPXE
   # #!ipxe
-  # kernel http://rpmb.carrierzone.com/boot/centos/7.8.2003/os/x86_64/images/pxeboot/vmlinuz ip=dhcp ksdevice= inst.ks=http://rpmb.carrierzone.com/ks/default.cfg net.ifnames=0 biosdevname=0
-  # initrd http://rpmb.carrierzone.com/boot/centos/7.8.2003/os/x86_64/images/pxeboot/initrd.img
+  # kernel http://rpmb.carrierzone.com/boot/centos/7.9.2009/os/x86_64/images/pxeboot/vmlinuz ip=dhcp ksdevice= inst.ks=http://rpmb.carrierzone.com/ks/default.cfg net.ifnames=0 biosdevname=0
+  # initrd http://rpmb.carrierzone.com/boot/centos/7.9.2009/os/x86_64/images/pxeboot/initrd.img
   # boot
 
   # $hostname should match DHCP option host-name or the host declaration name

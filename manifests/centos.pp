@@ -8,28 +8,23 @@ define pxe::centos (
   Pxe::Centos_version $version = $name,
   Enum['x86_64', 'i386', 'aarch64'] $arch = 'x86_64',
 ) {
-  # TODO: CentOS 8 setup
-
   include pxe::storage
   include pxe::params
 
   $storage_directory  = $pxe::params::storage_directory
 
-  $centos7_current_version = $pxe::params::centos7_current_version
-  $stream8_current_version = $pxe::params::stream8_current_version
   $stream9_current_version = $pxe::params::stream9_current_version
+  $stream10_current_version = $pxe::params::stream10_current_version
 
   $real_version = $version ? {
-    '7'     => $centos7_current_version,
-    /^8/    => $stream8_current_version,
     /^9/    => $stream9_current_version,
+    /^10/    => $stream10_current_version,
     default => $version
   }
 
   $major_version = $real_version ? {
-    /^7/ => 7,
-    # including 8-stream
-    /^8/ => 8,
+    # including 10-stream
+    /^10/ => 10,
     # including 9-stream
     /^9/ => 9,
   }
@@ -49,10 +44,7 @@ define pxe::centos (
   $distro_base_directory = "${storage_directory}/centos/${real_version}"
 
   case $real_version {
-    $centos7_current_version, $stream8_current_version: {
-      $centos_url = "http://mirror.centos.org/centos/${real_version}/${repo_path}"
-    }
-    $stream9_current_version: {
+    $stream9_current_version, $stream10_current_version: {
       $centos_url = "http://mirror.stream.centos.org/${real_version}/${repo_path}"
     }
     default: {

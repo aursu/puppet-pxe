@@ -1,0 +1,13 @@
+<% |
+  String $tftp_username = 'tftp',
+  Array[Stdlib::Unixpath] $tftp_directory = ['/srv/tftp'],
+  Variant[Enum[''], Stdlib::IP::Address] $tftp_address = '',
+  Integer $tftp_port = 69,
+  Array[String] $tftp_options = ['--secure'],
+| -%>
+# /etc/default/tftpd-hpa
+
+TFTP_USERNAME="<%= $tftp_username %>"
+TFTP_DIRECTORY="<%= $tftp_directory.join(' ') %>"
+TFTP_ADDRESS="<%= $tftp_address %>:<%= $tftp_port %>"
+TFTP_OPTIONS="<%= $tftp_options.join(' ') %>"

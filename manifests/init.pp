@@ -4,6 +4,4 @@
 #
 # @example
 #   include pxe
-class pxe (
-  Boolean $centos6_support = false,
-) {}
+class pxe {}

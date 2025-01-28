@@ -18,11 +18,11 @@ define pxe::dhcp::shared_network (
     ]
   ]       $nameservers      = undef,
   Optional[Stdlib::Fqdn]
-          $domain_name      = undef,
+  $domain_name      = undef,
   Optional[Array[String]]
-          $options          = undef,
+  $options          = undef,
   Optional[Array[String]]
-          $parameters       = undef,
+  $parameters       = undef,
   # Any subnets in a shared network should be declared within a shared-network
   # statement
   Hash[

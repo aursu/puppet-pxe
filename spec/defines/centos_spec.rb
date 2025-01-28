@@ -4,7 +4,7 @@ require 'spec_helper'
 
 describe 'pxe::centos' do
   let(:pre_condition) { "class { 'pxe': }" }
-  let(:title) { '7.9.2009' }
+  let(:title) { '10-stream' }
   let(:params) do
     {}
   end
@@ -15,7 +15,7 @@ describe 'pxe::centos' do
 
       it { is_expected.to compile }
 
-      ['7', '7.9.2009', '8-stream'].each do |centos|
+      ['9-stream', '10-stream', '10-20250123.0'].each do |centos|
         context "with CentOS version #{centos}" do
           let(:title) { centos }
 

@@ -1,6 +1,6 @@
 {
   "name": "aursu-pxe",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "author": "aursu",
   "summary": "Setup PXE environment",
   "license": "Apache-2.0",
@@ -10,35 +10,39 @@
   "dependencies": [
     {
       "name": "aursu/openssh",
-      "version_requirement": ">= 0.2.2 < 1.0.0"
+      "version_requirement": ">= 0.9.6 < 1.0.0"
     },
     {
       "name": "puppet/archive",
-      "version_requirement": ">= 4.5.0 < 8.0.0"
+      "version_requirement": ">= 7.1.0 < 8.0.0"
     },
     {
-      "name": "puppet/nginx",
-      "version_requirement": ">= 1.0.0 < 5.0.0"
+      "name": "aursu/nginx",
+      "version_requirement": ">= 6.0.2 < 7.0.0"
     },
     {
       "name": "puppet/dhcp",
-      "version_requirement": ">= 4.0.0 < 7.0.0"
+      "version_requirement": ">= 6.1.0 < 7.0.0"
     },
     {
       "name": "puppetlabs/apache",
-      "version_requirement": ">= 11.0.0 < 13.0.0"
+      "version_requirement": ">= 12.2.0 < 13.0.0"
     },
     {
       "name": "puppetlabs/concat",
-      "version_requirement": ">= 6.2.0 < 10.0.0"
+      "version_requirement": ">= 9.1.0 < 10.0.0"
     },
     {
       "name": "puppetlabs/stdlib",
-      "version_requirement": ">= 4.1.0 < 10.0.0"
+      "version_requirement": ">= 9.7.0 < 10.0.0"
     },
     {
       "name": "puppetlabs/vcsrepo",
-      "version_requirement": ">= 3.0.0 < 7.0.0"
+      "version_requirement": ">= 6.1.0 < 7.0.0"
+    },
+    {
+      "name": "aursu/bsys",
+      "version_requirement": ">= 0.10.3 < 1.0.0"
     }
   ],
   "operatingsystem_support": [
@@ -46,6 +50,20 @@
       "operatingsystem": "CentOS",
       "operatingsystemrelease": [
         "7"
+      ]
+    },
+    {
+      "operatingsystem": "Rocky",
+      "operatingsystemrelease": [
+        "8",
+        "9"
+      ]
+    },
+    {
+      "operatingsystem": "Ubuntu",
+      "operatingsystemrelease": [
+        "22.04",
+        "24.04"
       ]
     }
   ],

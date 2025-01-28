@@ -82,7 +82,7 @@ class pxe::profile::pxe (
   # Puppet
   Optional[String] $puppet_local_config = undef,
   Boolean $post_install_puppet_agent = false,
-  Enum['puppet6', 'puppet7', 'puppet8'] $puppet_platform = 'puppet7',
+  Enum['puppet7', 'puppet8'] $puppet_platform = 'puppet8',
 ) {
   # In case if main WEB service is Nginx we should proxy requests from Nginx
   # to Apache using settings in class 'pxe::nginx'

@@ -21,27 +21,10 @@ describe 'pxe::client_config' do
           .with_content(%r{^set options='ip=dhcp ksdevice= inst.ks=http://bsys.domain.tld/ks/default.cfg net.ifnames=0 biosdevname=0'$})
       }
 
-      ['7', '7.9.2009'].each do |centos|
-        context "with CentOS version #{centos}" do
-          let(:params) do
-            super().merge(
-              osrelease: centos,
-            )
-          end
-
-          it { is_expected.to compile }
-
-          it {
-            is_expected.to contain_file('/var/lib/pxe/namevar.cfg')
-              .with_content(%r{^set kernel='/boot/centos/7/os/x86_64/images/pxeboot/vmlinuz'$})
-          }
-        end
-      end
-
-      context 'with CentOS version 8-stream' do
+      context "with CentOS version 10-20250123.0" do
         let(:params) do
           super().merge(
-            osrelease: '8-stream',
+            osrelease: '10-20250123.0',
           )
         end
 
@@ -49,7 +32,22 @@ describe 'pxe::client_config' do
 
         it {
           is_expected.to contain_file('/var/lib/pxe/namevar.cfg')
-            .with_content(%r{^set kernel='/boot/centos/8-stream/os/x86_64/images/pxeboot/vmlinuz'$})
+            .with_content(%r{^set kernel='/boot/centos/10/os/x86_64/images/pxeboot/vmlinuz'$})
+        }
+      end
+
+      context "with CentOS version 10-stream" do
+        let(:params) do
+          super().merge(
+            osrelease: '10-stream',
+          )
+        end
+
+        it { is_expected.to compile }
+
+        it {
+          is_expected.to contain_file('/var/lib/pxe/namevar.cfg')
+            .with_content(%r{^set kernel='/boot/centos/10-stream/os/x86_64/images/pxeboot/vmlinuz'$})
         }
       end
     end
