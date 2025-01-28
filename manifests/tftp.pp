@@ -14,13 +14,13 @@ class pxe::tftp (
 ) inherits pxe::params {
   include bsys::params
 
+  package { $server_package:
+    ensure => present,
+  }
+
   case $bsys::params::osfam {
     'RedHat': {
       include pxe::tftp::xinetd
-
-      package { $server_package:
-        ensure => present,
-      }
 
       # TFTP content
       file { $directory:
@@ -31,10 +31,6 @@ class pxe::tftp (
       Package[$server_package] -> Class['pxe::tftp::xinetd']
     }
     'Debian': {
-      package { $server_package:
-        ensure => present,
-      }
-
       service { 'tftpd-hpa':
         ensure  => running,
         enable  => true,
