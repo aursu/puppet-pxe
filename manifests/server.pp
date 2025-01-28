@@ -22,7 +22,6 @@ class pxe::server (
 
   $storage_directory = $pxe::params::storage_directory
 
-  $stream9_version   = $pxe::params::stream9_current_version
   $install_server    = $server_name
 
   # Web service
