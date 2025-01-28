@@ -5,7 +5,7 @@
 # @example
 #   include pxe::profile::httpd
 class pxe::profile::httpd (
-  Stdlib::Port $listen_port = 80,
+  Stdlib::Port $listen_port = 8069,
   String  $servername = 'localhost',
   Boolean $manage_group = true,
   Boolean $manage_user = true,

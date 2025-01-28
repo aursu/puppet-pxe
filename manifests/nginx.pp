@@ -7,7 +7,7 @@
 class pxe::nginx (
   Stdlib::Fqdn $server_name,
   Array[Stdlib::IP::Address] $resolver,
-  Stdlib::Port $proxy_port  = 8080,
+  Stdlib::Port $proxy_port  = 8069,
 ) {
   $location_proxy_handler = {
     proxy_set_header  => [
