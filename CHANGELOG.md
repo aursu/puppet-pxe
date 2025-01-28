@@ -73,11 +73,22 @@ All notable changes to this project will be documented in this file.
 
 **Features**
 
-**Bugfixes**
-
 * Removed CentOS 6/7, CentOS Stream 8
 * Added CentOS Stream 10
 * Added Ubuntu support for TFTP
 * Added xinetd decomission for Ubuntu
+
+**Bugfixes**
+
+**Known Issues**
+
+## Release 0.7.0
+
+**Features**
+
+* Added iPXE nstallation on Ubuntu
+* Added Grub 2 intallation on Ubuntu
+
+**Bugfixes**
 
 **Known Issues**
