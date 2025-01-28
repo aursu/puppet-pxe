@@ -36,12 +36,12 @@ define pxe::dhcp::group (
   Boolean $host_decl_names  = false,
   Boolean $pxe_settings     = false,
   Optional[Stdlib::Host]
-          $next_server      = undef,
+  $next_server      = undef,
   Boolean $tftp_server_name = true,
   Optional[String]
-          $pxe_filename     = undef,
+  $pxe_filename     = undef,
   Optional[String]
-          $comment          = undef,
+  $comment          = undef,
   Hash[
     Stdlib::Host,
     Pxe::Dhcp::Host
