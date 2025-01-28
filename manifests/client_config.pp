@@ -24,9 +24,8 @@ define pxe::client_config (
 ) {
   include pxe::params
 
-  # TODO: move accent to CentOS Stream 10 or Rocky Linux 9
-  $default_kernel = '/boot/centos/7/os/x86_64/images/pxeboot/vmlinuz'
-  $default_initimg = '/boot/centos/7/os/x86_64/images/pxeboot/initrd.img'
+  $default_kernel = '/boot/centos/10-stream/BaseOS/x86_64/os/images/pxeboot/vmlinuz'
+  $default_initimg = '/boot/centos/10-stream/BaseOS/x86_64/os/images/pxeboot/initrd.img'
 
   if $centos {
     if $osrelease {
