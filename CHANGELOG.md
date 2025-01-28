@@ -69,7 +69,7 @@ All notable changes to this project will be documented in this file.
 
 * Added missed require
 
-## Release 0.6.0
+## Release 0.6.1
 
 **Features**
 
@@ -78,5 +78,6 @@ All notable changes to this project will be documented in this file.
 * Removed CentOS 6/7, CentOS Stream 8
 * Added CentOS Stream 10
 * Added Ubuntu support for TFTP
+* Added xinetd decomission for Ubuntu
 
 **Known Issues**

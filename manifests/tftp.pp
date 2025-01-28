@@ -5,58 +5,43 @@
 # @example
 #   include pxe::tftp
 class pxe::tftp (
-  Boolean $service_enable = true,
-  Boolean $verbose = false,
   String $username = 'tftp',
-  Variant[Stdlib::Unixpath, Array[Stdlib::Unixpath]] $directory = '/srv/tftp',
+  Stdlib::Unixpath $storage_directory = $pxe::params::tftp_directory,
   Variant[Enum[''], Stdlib::IP::Address] $address = '0.0.0.0',
   Integer $port = 69,
   Variant[String, Array[String]] $options = '--secure',
-) {
+  String $server_package = $pxe::params::tftp_server_package,
+) inherits pxe::params {
   include bsys::params
 
   case $bsys::params::osfam {
     'RedHat': {
-      # Install the xinetd service, that manages the tftpd service
-      package { 'xinetd':
+      include pxe::tftp::xinetd
+
+      package { $server_package:
         ensure => present,
-      }
-
-      package { 'tftp-server':
-        ensure => present,
-      }
-
-      file { '/etc/xinetd.d/tftp':
-        ensure  => file,
-        content => template('pxe/xinetd.tftp.erb'),
-        require => Package['tftp-server'],
-        notify  => Service['xinetd'],
-      }
-
-      service { 'xinetd':
-        ensure  => running,
-        enable  => true,
-        require => Package['xinetd'],
       }
 
       # TFTP content
-      file { '/var/lib/tftpboot':
+      file { $storage_directory:
         ensure  => directory,
-        require => Package['tftp-server'],
+        require => Package[$server_package],
       }
+
+      Package[$server_package] -> Class['pxe::tftp::xinetd']
     }
     'Debian': {
-      package { 'tftpd-hpa':
+      package { $server_package:
         ensure => present,
       }
 
       service { 'tftpd-hpa':
         ensure  => running,
         enable  => true,
-        require => Package['tftpd-hpa'],
+        require => Package[$server_package],
       }
 
-      $tftp_directory = [$directory].flatten()
+      $tftp_directory = [$storage_directory].flatten()
       $tftp_options = [$options].flatten()
 
       file { '/etc/default/tftpd-hpa':
@@ -68,7 +53,7 @@ class pxe::tftp (
             tftp_port      => $port,
             tftp_options   => $tftp_options,
         }),
-        require => Package['tftpd-hpa'],
+        require => Package[$server_package],
         notify  => Service['tftpd-hpa'],
       }
 
@@ -76,9 +61,14 @@ class pxe::tftp (
         # TFTP content
         file { $tftp_dir:
           ensure  => directory,
-          require => Package['tftpd-hpa'],
+          require => Package[$server_package],
           before  => Service['tftpd-hpa'],
         }
+      }
+
+      class { 'pxe::tftp::xinetd':
+        decomission => true,
+        before      => Service['tftpd-hpa'],
       }
     }
   }
