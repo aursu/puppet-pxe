@@ -12,49 +12,21 @@ define pxe::centos (
   include pxe::params
 
   $storage_directory  = $pxe::params::storage_directory
+  $tftp_directory = $pxe::params::tftp_directory
 
-  $stream9_current_version = $pxe::params::stream9_current_version
-  $stream10_current_version = $pxe::params::stream10_current_version
-
-  $real_version = $version ? {
-    /^9/    => $stream9_current_version,
-    /^10/    => $stream10_current_version,
-    default => $version
+  $common_version = $version ? {
+    /^9/    => '9-stream',
+    /^10/   => '10-stream',
   }
 
-  $major_version = $real_version ? {
-    # including 10-stream
-    /^10/ => 10,
-    # including 9-stream
-    /^9/ => 9,
-  }
+  $repo = 'BaseOS'
+  $arch_path = "${repo}/${arch}"
+  $repo_path = "${repo}/${arch}/os"
 
-  if $major_version > 7 {
-    $repo = 'BaseOS'
-    $arch_path = "${repo}/${arch}"
-    $repo_path = "${repo}/${arch}/os"
-  }
-  else {
-    $repo = 'os'
-    $arch_path = "${repo}/${arch}"
-    $repo_path = $arch_path
-  }
+  $base_directory    = "${tftp_directory}/boot/centos/${common_version}"
+  $distro_base_directory = "${storage_directory}/centos/${common_version}"
 
-  $base_directory    = "/var/lib/tftpboot/boot/centos/${real_version}"
-  $distro_base_directory = "${storage_directory}/centos/${real_version}"
-
-  case $real_version {
-    $stream9_current_version, $stream10_current_version: {
-      $centos_url = "http://mirror.stream.centos.org/${real_version}/${repo_path}"
-    }
-    default: {
-      file { [$base_directory, $distro_base_directory]:
-        ensure => directory,
-      }
-
-      $centos_url = "http://vault.centos.org/${version}/${repo_path}"
-    }
-  }
+  $centos_url = "http://mirror.stream.centos.org/${common_version}/${repo_path}"
 
   $arch_directory        = "${base_directory}/${arch_path}"
   $repo_directory        = "${base_directory}/${repo_path}"
@@ -83,17 +55,5 @@ define pxe::centos (
   archive { "${pxeboot_directory}/initrd.img":
     ensure => present,
     source => "${centos_url}/images/pxeboot/initrd.img",
-  }
-
-  # /diskless/centos/7/os/x86_64/LiveOS/squashfs.img
-  if $major_version == 7 {
-    file { "${distro_repo_directory}/LiveOS":
-      ensure => directory,
-    }
-
-    archive { "${distro_repo_directory}/LiveOS/squashfs.img":
-      ensure => present,
-      source => "${centos_url}/LiveOS/squashfs.img",
-    }
   }
 }
