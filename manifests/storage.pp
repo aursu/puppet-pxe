@@ -11,12 +11,7 @@ class pxe::storage (
   include apache::params
   $user = $apache::params::user
 
-  include pxe::params
-
   $storage_directory  = $pxe::params::storage_directory
-
-  $stream9_current_version = $pxe::params::stream9_current_version
-  $stream10_current_version = $pxe::params::stream10_current_version
 
   $rocky8_current_version = $pxe::params::rocky8_current_version
   $rocky9_current_version = $pxe::params::rocky9_current_version
