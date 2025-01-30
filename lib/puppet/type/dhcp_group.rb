@@ -250,7 +250,7 @@ Puppet::Type.newtype(:dhcp_group) do
     ipxe_uefi_filename = self[:ipxe_uefi_filename]
     ipxe_script = self[:ipxe_script]
 
-    @generated_content = ERB.new(<<-EOF, nil, '<>').result(binding).strip + newline
+    @generated_content = ERB.new(<<-EOF, trim_mode: '<>').result(binding).strip + newline
 group {
 <% if host_decl_names %>
   use-host-decl-names on;

@@ -82,7 +82,7 @@ All notable changes to this project will be documented in this file.
 
 **Known Issues**
 
-## Release 0.7.0
+## Release 0.7.1
 
 **Features**
 
@@ -90,5 +90,7 @@ All notable changes to this project will be documented in this file.
 * Added Grub 2 intallation on Ubuntu
 
 **Bugfixes**
+
+* Fix compatibility with Ruby 3.x
 
 **Known Issues**
