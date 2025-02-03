@@ -11,9 +11,9 @@
 #   by Puppet (therefore could be removed)
 #
 class pxe::grub (
-  Stdlib::Unixpath $net_directory = $pxe::params::tftp_directory,
+  Stdlib::Unixpath $net_directory = $pxe::params::tftp_root,
 ) inherits pxe::params {
-  include pxe::params
+  include bsys::params
 
   case $bsys::params::osfam {
     'Debian': {

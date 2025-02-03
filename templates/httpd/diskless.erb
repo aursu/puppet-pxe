@@ -2,7 +2,7 @@
     # alias for kickstart configs and all other stuff
     Alias /centos <%= @storage_directory %>/centos
     Alias /ks     <%= @storage_directory %>/configs
-    Alias /boot   /var/lib/tftpboot/boot
+    Alias /boot   <%= @tftp_root %>/boot
 
     <Directory "<%= @storage_directory %>">
         Require all granted
@@ -16,7 +16,7 @@
         Options None
     </Directory>
 
-    <Directory "/var/lib/tftpboot/boot">
+    <Directory "<%= @tftp_root %>/boot">
         Require all granted
     </Directory>
 </IfModule>

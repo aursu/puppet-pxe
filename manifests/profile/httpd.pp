@@ -10,7 +10,7 @@ class pxe::profile::httpd (
   Boolean $manage_group = true,
   Boolean $manage_user = true,
   Boolean $enable = true,
-  String  $conf_template = 'pxe/profile/httpd.conf.epp',
+  String  $conf_template = 'pxe/httpd/httpd.conf.epp',
 ) {
   if $enable {
     $service_ensure = 'running'
@@ -53,7 +53,7 @@ class pxe::profile::httpd (
   if defined('$apache::parameters') {
     apache::custom_config { 'docroot':
       priority => '00',
-      content  => epp('pxe/profile/docroot-httpd.conf.epp', {
+      content  => epp('pxe/httpd/docroot.epp', {
           docroot => $docroot,
       }),
     }

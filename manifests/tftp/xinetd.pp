@@ -22,7 +22,7 @@
 class pxe::tftp::xinetd (
   Boolean $service_enable = true,
   Boolean $verbose = false,
-  Stdlib::Unixpath $storage_directory = $pxe::params::tftp_directory,
+  Stdlib::Unixpath $root_directory = $pxe::params::tftp_root,
   Boolean $decomission = false,
 ) inherits pxe::params {
   if $decomission {

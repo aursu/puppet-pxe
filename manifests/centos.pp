@@ -12,7 +12,7 @@ define pxe::centos (
   include pxe::params
 
   $storage_directory  = $pxe::params::storage_directory
-  $tftp_directory = $pxe::params::tftp_directory
+  $tftp_root = $pxe::params::tftp_root
 
   $common_version = $version ? {
     /^9/    => '9-stream',
@@ -23,7 +23,7 @@ define pxe::centos (
   $arch_path = "${repo}/${arch}"
   $repo_path = "${repo}/${arch}/os"
 
-  $base_directory    = "${tftp_directory}/boot/centos/${common_version}"
+  $base_directory    = "${tftp_root}/boot/centos/${common_version}"
   $distro_base_directory = "${storage_directory}/centos/${common_version}"
 
   $centos_url = "http://mirror.stream.centos.org/${common_version}/${repo_path}"

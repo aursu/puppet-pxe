@@ -1,0 +1,12 @@
+<% |
+  Variant[Enum['7', '8'], Integer[7, 8]] $version = '8',
+| -%>
+<%
+  $platform = "puppet${version}"
+-%>
+[<%= $platform %>]
+name=Puppet <%= $version %> Repository el $releasever - $basearch
+baseurl=http://yum.puppet.com/<%= $platform %>/el/$releasever/$basearch
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-2025-04-06-<%= $platform %>-release
+enabled=1
+gpgcheck=1

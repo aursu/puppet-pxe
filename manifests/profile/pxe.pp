@@ -82,7 +82,7 @@ class pxe::profile::pxe (
   # Puppet
   Optional[String] $puppet_local_config = undef,
   Boolean $post_install_puppet_agent = false,
-  Enum['puppet7', 'puppet8'] $puppet_platform = 'puppet8',
+  Variant[Enum['7', '8'], Integer[7, 8]] $puppet_version = 8,
 ) {
   # In case if main WEB service is Nginx we should proxy requests from Nginx
   # to Apache using settings in class 'pxe::nginx'
@@ -97,18 +97,13 @@ class pxe::profile::pxe (
   # }
 
   # GRUB installation
-  class { 'pxe::grub':
-    enable => $enable,
-  }
+  class { 'pxe::grub': }
 
   # iPXE installation
   class { 'pxe::ipxe': }
 
   # TFTP installation
-  class { 'pxe::tftp':
-    service_enable => $enable,
-    verbose        => true,
-  }
+  class { 'pxe::tftp': }
 
   # DHCP daemon installation (ISC DHCP)
   class { 'pxe::dhcp':
@@ -127,7 +122,7 @@ class pxe::profile::pxe (
     manage_web_user           => $enable,
     root_authorized_keys      => $root_authorized_keys,
     post_install_puppet_agent => $post_install_puppet_agent,
-    puppet_platform           => $puppet_platform,
+    puppet_version            => $puppet_version,
     puppet_local_config       => $puppet_local_config,
   }
 

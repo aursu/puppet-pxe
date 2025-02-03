@@ -21,7 +21,7 @@ describe 'pxe::client_config' do
           .with_content(%r{^set options='ip=dhcp ksdevice= inst.ks=http://bsys.domain.tld/ks/default.cfg net.ifnames=0 biosdevname=0'$})
       }
 
-      context "with CentOS version 10-20250123.0" do
+      context 'with CentOS version 10-20250123.0' do
         let(:params) do
           super().merge(
             osrelease: '10-20250123.0',
@@ -36,7 +36,7 @@ describe 'pxe::client_config' do
         }
       end
 
-      context "with CentOS version 10-stream" do
+      context 'with CentOS version 10-stream' do
         let(:params) do
           super().merge(
             osrelease: '10-stream',

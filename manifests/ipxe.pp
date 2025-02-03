@@ -8,7 +8,7 @@ class pxe::ipxe inherits pxe::params {
   include pxe::storage
   include bsys::params
 
-  $tftp_root = $pxe::params::tftp_directory
+  $tftp_root = $pxe::params::tftp_root
   $ipxe_root = "${tftp_root}/boot/ipxe"
   $ipxe_package = $pxe::params::ipxe_package
 

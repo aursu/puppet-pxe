@@ -15,17 +15,17 @@ class pxe::params {
   case $bsys::params::osfam {
     'RedHat': {
       $tftp_server_package = 'tftp-server'
-      $tftp_directory      = '/var/lib/tftpboot'
+      $tftp_root           = '/var/lib/tftpboot'
       $ipxe_package        = 'ipxe-bootimgs'
     }
     'Debian': {
       $tftp_server_package = 'tftpd-hpa'
-      $tftp_directory      = '/srv/tftp'
+      $tftp_root           = '/srv/tftp'
       $ipxe_package        = 'ipxe'
     }
     default: {
       $tftp_server_package = undef
-      $tftp_directory      = undef
+      $tftp_root           = undef
       $ipxe_package        = undef
     }
   }

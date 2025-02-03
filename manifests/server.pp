@@ -15,12 +15,15 @@ class pxe::server (
   Boolean $rocky8_download = false,
   Boolean $rocky9_download = true,
   Boolean $post_install_puppet_agent = false,
-  Enum['puppet7', 'puppet8'] $puppet_platform = 'puppet8',
+  Variant[Enum['7', '8'], Integer[7, 8]] $puppet_version = 8,
 ) {
   include pxe::storage
   include pxe::params
 
+  $puppet_platform = "puppet${puppet_version}"
+
   $storage_directory = $pxe::params::storage_directory
+  $tftp_root         = $pxe::params::tftp_root
 
   $install_server    = $server_name
 
@@ -39,7 +42,7 @@ class pxe::server (
   }
 
   apache::custom_config { 'diskless':
-    content => template('pxe/httpd.conf.diskless.erb'),
+    content => template('pxe/httpd/diskless.erb'),
   }
 
   # CGI trigger for host installation
@@ -60,53 +63,40 @@ class pxe::server (
     creates => '/root/bin',
   }
 
-  # repository installation script
-  # file { '/root/bin/install-7-x86_64.sh':
-  #   ensure  => file,
-  #   content => file('pxe/scripts/install.sh'),
-  #   mode    => '0500',
-  # }
-
-  # repository update script (including EPEL and rpmforge)
-  # file { '/root/bin/update-7-x86_64.sh':
-  #   ensure  => file,
-  #   content => file('pxe/scripts/update.sh'),
-  #   mode    => '0500',
-  # }
-
   if $post_install_puppet_agent {
+    file { "${storage_directory}/configs/assets/${puppet_platform}-keyring.asc":
+      ensure  => file,
+      content => file('pxe/assets/puppet-keyring.asc'),
+      mode    => '0644',
+    }
+
     # install Puppet repository
-    file { "${storage_directory}/configs/assets/${puppet_platform}.repo":
+    file { "${storage_directory}/configs/assets/${puppet_platform}-release.repo":
       ensure  => file,
-      content => file("pxe/assets/${puppet_platform}.repo"),
+      content => epp('pxe/puppet/repo.epp', {
+          version => "${puppet_version}", # lint:ignore:only_variable_string
+      }),
       mode    => '0644',
     }
 
-    # install Puppet repository GPG key
-    # https://puppet.com/docs/puppet/7.5/install_puppet.html#enable_the_puppet_platform_repository
-    # https://yum.puppetlabs.com/RPM-GPG-KEY-puppet
-    file { "${storage_directory}/configs/assets/RPM-GPG-KEY-puppet":
+    file { "${storage_directory}/configs/assets/RPM-GPG-KEY-2025-04-06-${puppet_platform}-release":
       ensure  => file,
-      content => file('pxe/assets/RPM-GPG-KEY-puppet'),
+      content => file('pxe/assets/RPM-GPG-KEY-2025-04-06-puppet-release'),
       mode    => '0644',
     }
 
-    file { "${storage_directory}/configs/assets/RPM-GPG-KEY-2025-04-06-puppet7-release":
-      ensure  => file,
-      content => file('pxe/assets/RPM-GPG-KEY-2025-04-06-puppet7-release'),
-      mode    => '0644',
-    }
-
-    $rpm_gpg_key_url  = "http://${install_server}/ks/assets/RPM-GPG-KEY-puppet"
-    $puppet_repo_url  = "http://${install_server}/ks/assets/${puppet_platform}.repo"
-    $puppet_repo_path = "/etc/yum.repos.d/${puppet_platform}.repo"
+    $rpm_gpg_key_url  = "http://${install_server}/ks/assets/RPM-GPG-KEY-2025-04-06-${puppet_platform}-release"
+    $puppet_repo_url  = "http://${install_server}/ks/assets/${puppet_platform}-release.repo"
+    $puppet_repo_path = "/etc/yum.repos.d/${puppet_platform}-release.repo"
+    $rpm_gpg_key_path = "/etc/pki/rpm-gpg/RPM-GPG-KEY-2025-04-06-${puppet_platform}-release"
 
     case $puppet_platform {
       'puppet7': {
-        $agent_version = '7.29.1-1'
-        $rpm_gpg_key_path = '/etc/pki/rpm-gpg/RPM-GPG-KEY-puppet7-release'
+        $agent_version = '7.34.0-1'
       }
-      # TODO: Puppet 8
+      'puppet8': {
+        $agent_version = '8.10.0-1'
+      }
       default: {
         fail('Not supported Puppet platform provided')
       }
@@ -130,11 +120,11 @@ class pxe::server (
   }
 
   # Default asstes
-  # Default kickstart http://<install-server>/ks/default.cfg (CentOS 7 installation)
+  # Default kickstart http://<install-server>/ks/default.cfg (CentOS 8 installation)
   # python -c 'import crypt,getpass;pw=getpass.getpass();print(crypt.crypt(pw) if (pw==getpass.getpass("Confirm: ")) else exit())'
   file { "${storage_directory}/configs/default.cfg":
     ensure  => file,
-    content => template('pxe/default-centos-7-x86_64-ks.cfg.erb'),
+    content => template('pxe/default-centos-8-x86_64-ks.cfg.erb'),
   }
 
   file { "${storage_directory}/configs/default-8-x86_64.cfg":

@@ -94,3 +94,16 @@ All notable changes to this project will be documented in this file.
 * Fix compatibility with Ruby 3.x
 
 **Known Issues**
+
+## Release 0.8.0
+
+**Features**
+
+* Removed CentOS 6 and CentOS 7. Added CentOS 10
+* Added Ubuntu for storage and Puppet installation assets
+
+**Bugfixes**
+
+* Updated Puppet installation assets
+
+**Known Issues**

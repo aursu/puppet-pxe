@@ -19,32 +19,6 @@ describe 'pxe::tftp' do
           is_expected.to contain_file('/etc/xinetd.d/tftp')
             .with_content(%r{^\s+server_args\s+=\s+-s /var/lib/tftpboot$})
         }
-
-        context 'when tftp server disabled' do
-          let(:params) do
-            {
-              service_enable: false,
-            }
-          end
-
-          it {
-            is_expected.to contain_file('/etc/xinetd.d/tftp')
-              .with_content(%r{^\s+disable\s+=\s+yes$})
-          }
-        end
-
-        context 'when tftp server disabled' do
-          let(:params) do
-            {
-              verbose: true,
-            }
-          end
-
-          it {
-            is_expected.to contain_file('/etc/xinetd.d/tftp')
-              .with_content(%r{^\s+server_args\s+=\s+-s /var/lib/tftpboot --verbose$})
-          }
-        end
       elsif os_facts[:os]['family'] == 'Debian'
         it {
           is_expected.to contain_file('/etc/default/tftpd-hpa')

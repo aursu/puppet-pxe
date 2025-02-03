@@ -6,7 +6,7 @@
 #   include pxe::tftp
 class pxe::tftp (
   String $username = 'tftp',
-  Stdlib::Unixpath $directory = $pxe::params::tftp_directory,
+  Stdlib::Unixpath $root_directory = $pxe::params::tftp_root,
   Variant[Enum[''], Stdlib::IP::Address] $address = '0.0.0.0',
   Integer $port = 69,
   Variant[String, Array[String]] $options = '--secure',
@@ -23,7 +23,7 @@ class pxe::tftp (
       include pxe::tftp::xinetd
 
       # TFTP content
-      file { $directory:
+      file { $root_directory:
         ensure  => directory,
         require => Package[$server_package],
       }
@@ -37,7 +37,7 @@ class pxe::tftp (
         require => Package[$server_package],
       }
 
-      $tftp_directory = [$directory].flatten()
+      $tftp_directory = [$root_directory].flatten()
       $tftp_options = [$options].flatten()
 
       file { '/etc/default/tftpd-hpa':
@@ -53,13 +53,11 @@ class pxe::tftp (
         notify  => Service['tftpd-hpa'],
       }
 
-      $tftp_directory.each |$tftp_dir| {
-        # TFTP content
-        file { $tftp_dir:
-          ensure  => directory,
-          require => Package[$server_package],
-          before  => Service['tftpd-hpa'],
-        }
+      # TFTP content
+      file { $tftp_directory:
+        ensure  => directory,
+        require => Package[$server_package],
+        before  => Service['tftpd-hpa'],
       }
 
       class { 'pxe::tftp::xinetd':

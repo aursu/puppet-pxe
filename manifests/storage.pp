@@ -6,7 +6,7 @@
 #   include pxe::storage
 class pxe::storage (
   Boolean $setup_tftp_root = false,
-  Stdlib::Unixpath $tftp_root = $pxe::params::tftp_directory,
+  Stdlib::Unixpath $tftp_root = $pxe::params::tftp_root,
 ) inherits pxe::params {
   include apache::params
   $user = $apache::params::user
