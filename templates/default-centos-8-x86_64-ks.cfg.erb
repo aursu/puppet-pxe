@@ -65,14 +65,16 @@ done
 if [ ! -z "$HOSTNAME" ]; then
     curl "http://<%= @install_server %>/exec/move.cgi?$HOSTNAME"
 fi
+<% if @root_authorized_keys -%>
 
 # install authorized SSH keys for root user
 curl http://<%= @install_server %>/ks/assets/root.authorized_keys -Dheaders -odata -s
 if grep -q '200 OK' headers; then
     install -D -m600 data /root/.ssh/authorized_keys
 fi
-
+<% end -%>
 <% if @post_install_puppet_agent -%>
+
 # install Puppet repository GPG key
 curl <%= @rpm_gpg_key_url %> -Dheaders -odata -s
 if grep -q '200 OK' headers; then
@@ -94,6 +96,7 @@ fi
 
 # install Puppet Agent
 yum -y install puppet-agent-<%= @agent_version %>.el8
+<% if @puppet_local_config -%>
 
 # install Puppet agent config
 curl http://<%= @install_server %>/ks/assets/puppet.conf -Dheaders -odata -s
@@ -103,6 +106,7 @@ fi
 
 # bootstrap into Puppet
 /opt/puppetlabs/bin/puppet agent --test
+<% end -%>
 <% end -%>
 %end
 
