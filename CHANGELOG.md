@@ -95,7 +95,7 @@ All notable changes to this project will be documented in this file.
 
 **Known Issues**
 
-## Release 0.8.1
+## Release 0.8.2
 
 **Features**
 
@@ -106,5 +106,6 @@ All notable changes to this project will be documented in this file.
 
 * Updated Puppet installation assets
 * Fixed httpd template to support Ubuntu
+* Corrected listen and proxied port numbers
 
 **Known Issues**
