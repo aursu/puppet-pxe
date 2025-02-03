@@ -7,7 +7,8 @@
 class pxe::nginx (
   Stdlib::Fqdn $server_name,
   Array[Stdlib::IP::Address] $resolver,
-  Stdlib::Port $proxy_port  = 8069,
+  Stdlib::Port $listen_port = 80,
+  Stdlib::Port $proxy_port  = 8080,
 ) {
   $location_proxy_handler = {
     proxy_set_header  => [
@@ -22,6 +23,7 @@ class pxe::nginx (
 
   nginx::resource::server { 'pxe':
     server_name => [$server_name],
+    listen_port => $listen_port,
 
     error_log   => '/var/log/nginx/pxe.error_log info',
     access_log  => {
