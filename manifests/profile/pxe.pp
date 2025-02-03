@@ -77,7 +77,6 @@ class pxe::profile::pxe (
   String  $enc_repo_source,
   String  $enc_repo_identity,
   String  $enc_repo_branch = 'enc',
-  Boolean $enable = true,
   Optional[String] $root_authorized_keys = undef,
   # Puppet
   Optional[String] $puppet_local_config = undef,
@@ -107,7 +106,6 @@ class pxe::profile::pxe (
 
   # DHCP daemon installation (ISC DHCP)
   class { 'pxe::dhcp':
-    enable         => $enable,
     next_server    => $install_server_address,
     default_subnet => $dhcp_default_subnet,
   }
@@ -117,9 +115,8 @@ class pxe::profile::pxe (
   # Please notice 'manage_web_user' parameter - it could enable/disable system
   # users management by class 'httpd' declared inside 'pxe::server'
   class { 'pxe::server':
-    enable                    => $enable,
     server_name               => $install_server,
-    manage_web_user           => $enable,
+    manage_web_user           => true,
     root_authorized_keys      => $root_authorized_keys,
     post_install_puppet_agent => $post_install_puppet_agent,
     puppet_version            => $puppet_version,

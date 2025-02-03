@@ -22,23 +22,7 @@ class pxe::dhcp (
   # listening interface.
   # see "dhcp::pool" defined type from https://github.com/voxpupuli/puppet-dhcp
   Hash[String, Pxe::Dhcp::Subnet] $default_subnet = {},
-  Boolean $enable = true,
 ) {
-  if $enable {
-    $manage_service = true
-  }
-  else {
-    $manage_service = false
-
-    include dhcp::params
-    $servicename = $dhcp::params::servicename
-
-    service { $servicename:
-      ensure => stopped,
-      enable => false,
-    }
-  }
-
   # ISC DHCP
   class { 'dhcp':
     service_ensure       => running,
@@ -52,7 +36,7 @@ class pxe::dhcp (
     option_code150_value => 'ip-address',
 
     dhcp_conf_pxe        => template('pxe/dhcpd.conf.pxe.erb'),
-    manage_service       => $manage_service,
+    manage_service       => true,
   }
 
   $default_subnet.each | String $name, $parameters | {

@@ -11,7 +11,6 @@ class pxe::server (
   Boolean $manage_web_user = true,
   Optional[String] $root_authorized_keys = undef,
   Optional[String] $puppet_local_config = undef,
-  Boolean $enable = true,
   Boolean $rocky8_download = false,
   Boolean $rocky9_download = true,
   Boolean $post_install_puppet_agent = false,
@@ -34,7 +33,6 @@ class pxe::server (
       servername   => $server_name,
       manage_group => $manage_web_user,
       manage_user  => $manage_web_user,
-      enable       => $enable,
     }
 
     # create apache user before storage setup

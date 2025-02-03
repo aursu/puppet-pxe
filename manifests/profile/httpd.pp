@@ -9,18 +9,8 @@ class pxe::profile::httpd (
   String  $servername = 'localhost',
   Boolean $manage_group = true,
   Boolean $manage_user = true,
-  Boolean $enable = true,
   String  $conf_template = 'pxe/httpd/httpd.conf.epp',
 ) {
-  if $enable {
-    $service_ensure = 'running'
-    $service_enable = true
-  }
-  else {
-    $service_ensure = 'stopped'
-    $service_enable = false
-  }
-
   $docroot = '/var/www/html'
 
   class { 'apache':
@@ -42,8 +32,8 @@ class pxe::profile::httpd (
     conf_template          => $conf_template,
     mime_types_additional  => undef,
     service_manage         => true,
-    service_ensure         => $service_ensure,
-    service_enable         => $service_enable,
+    service_ensure         => 'running',
+    service_enable         => true,
     manage_group           => $manage_group,
     manage_user            => $manage_user,
   }

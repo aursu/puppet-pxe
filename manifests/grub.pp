@@ -5,11 +5,6 @@
 # @example
 #   include pxe::grub
 #
-# @param enable
-#   Boolean. Default is true. If set to false then TFTP and default
-#   distributions files (CentOS 6 and CentOS 7) will not be managed
-#   by Puppet (therefore could be removed)
-#
 class pxe::grub (
   Stdlib::Unixpath $net_directory = $pxe::params::tftp_root,
 ) inherits pxe::params {
