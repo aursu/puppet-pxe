@@ -95,7 +95,7 @@ All notable changes to this project will be documented in this file.
 
 **Known Issues**
 
-## Release 0.8.0
+## Release 0.8.1
 
 **Features**
 
@@ -105,5 +105,6 @@ All notable changes to this project will be documented in this file.
 **Bugfixes**
 
 * Updated Puppet installation assets
+* Fixed httpd template to support Ubuntu
 
 **Known Issues**

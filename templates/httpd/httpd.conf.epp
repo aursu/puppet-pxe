@@ -62,7 +62,7 @@ Include "<%= $mod_load_dir %>/*.load"
     <IfModule logio_module>
         LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O" combinedio
     </IfModule>
-    CustomLog "logs/access_log" combined
+    CustomLog "<%= $logroot %>/access_log" combined
 </IfModule>
 
 <% if $mod_load_dir != $confd_dir and $mod_load_dir != $vhost_load_dir { -%>
