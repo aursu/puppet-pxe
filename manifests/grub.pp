@@ -49,11 +49,6 @@ class pxe::grub (
 
       $default_kernel = '/boot/ubuntu/noble/casper/vmlinuz'
       $default_initimg = '/boot/ubuntu/noble/casper/initrd'
-
-      file { "${net_directory}/boot/grub/grub.cfg":
-        ensure  => file,
-        content => template('pxe/grub.cfg.erb'),
-      }
     }
     'RedHat': {
       # GRUB2 Modules installation
@@ -117,11 +112,11 @@ class pxe::grub (
       # TODO: move accent to CentOS Stream 10 or Rocky Linux 9
       $default_kernel = '/boot/centos/10-stream/BaseOS/x86_64/os/images/pxeboot/vmlinuz'
       $default_initimg = '/boot/centos/10-stream/BaseOS/x86_64/os/images/pxeboot/initrd.img'
-
-      file { '/var/lib/tftpboot/boot/grub/grub.cfg':
-        ensure  => file,
-        content => template('pxe/grub.cfg.erb'),
-      }
     }
+  }
+
+  file { "${net_directory}/boot/grub/grub.cfg":
+    ensure  => file,
+    content => template('pxe/grub.cfg.erb'),
   }
 }
