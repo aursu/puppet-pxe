@@ -95,12 +95,13 @@ All notable changes to this project will be documented in this file.
 
 **Known Issues**
 
-## Release 0.8.2
+## Release 0.8.3
 
 **Features**
 
 * Removed CentOS 6 and CentOS 7. Added CentOS 10
 * Added Ubuntu for storage and Puppet installation assets
+* Added SSH key settings for ENC repo.
 
 **Bugfixes**
 
