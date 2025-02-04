@@ -24,6 +24,8 @@ define pxe::client_config (
 ) {
   include pxe::params
 
+  $tftp_root = $pxe::params::tftp_root
+
   $default_kernel = '/boot/centos/10-stream/BaseOS/x86_64/os/images/pxeboot/vmlinuz'
   $default_initimg = '/boot/centos/10-stream/BaseOS/x86_64/os/images/pxeboot/initrd.img'
 
@@ -109,13 +111,13 @@ define pxe::client_config (
   file { "/var/lib/pxe/${hostname}.cfg":
     ensure  => file,
     content => template('pxe/host.cfg.erb'),
-    notify  => Exec["/var/lib/tftpboot/boot/install/${hostname}.cfg"],
+    notify  => Exec["${tftp_root}/boot/install/${hostname}.cfg"],
   }
 
-  exec { "/var/lib/tftpboot/boot/install/${hostname}.cfg":
-    command     => "rm -f /var/lib/tftpboot/boot/install/${hostname}.cfg",
+  exec { "${tftp_root}/boot/install/${hostname}.cfg":
+    command     => "rm -f ${tftp_root}/boot/install/${hostname}.cfg",
     refreshonly => true,
     path        => '/usr/bin:/bin',
-    onlyif      => "test -f /var/lib/tftpboot/boot/install/${hostname}.cfg",
+    onlyif      => "test -f ${tftp_root}/boot/install/${hostname}.cfg",
   }
 }
