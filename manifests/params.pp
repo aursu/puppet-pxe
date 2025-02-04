@@ -12,6 +12,9 @@ class pxe::params {
   $rocky8_current_version = '8.10'
   $rocky9_current_version = '9.5'
 
+  $ubuntu22_current_version = '22.04.5'
+  $ubuntu24_current_version = '24.04.1'
+
   case $bsys::params::osfam {
     'RedHat': {
       $tftp_server_package = 'tftp-server'

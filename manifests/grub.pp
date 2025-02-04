@@ -82,27 +82,16 @@ class pxe::grub (
       # MAC: 00:50:56:8e:5b:30
       # IP: 10.55.156.40 (hex: 0A.37.9C.28)
       # /boot/grub/i386-pc/grub.cfg-01-00-50-56-8e-5b-30
-      # /boot/grub/i386-pc/grub.cfg-01-00-50-56-8e-5b-30
-      # /boot/grub/i386-pc/grub.cfg-0A379C28
       # /boot/grub/i386-pc/grub.cfg-0A379C28
       # /boot/grub/i386-pc/grub.cfg-0A379C2
-      # /boot/grub/i386-pc/grub.cfg-0A379C2
-      # /boot/grub/i386-pc/grub.cfg-0A379C
       # /boot/grub/i386-pc/grub.cfg-0A379C
       # /boot/grub/i386-pc/grub.cfg-0A379
-      # /boot/grub/i386-pc/grub.cfg-0A379
-      # /boot/grub/i386-pc/grub.cfg-0A37
       # /boot/grub/i386-pc/grub.cfg-0A37
       # /boot/grub/i386-pc/grub.cfg-0A3
-      # /boot/grub/i386-pc/grub.cfg-0A3
       # /boot/grub/i386-pc/grub.cfg-0A
-      # /boot/grub/i386-pc/grub.cfg-0A
-      # /boot/grub/i386-pc/grub.cfg-0
       # /boot/grub/i386-pc/grub.cfg-0
       # /boot/grub/i386-pc/grub.cfg
-      #
-      # cat boot/grub/i386-pc/grub.cfg
-      # source boot/grub/grub.cfg
+      # /boot/grub/grub.cfg
 
       # TODO: move accent to CentOS Stream 10 or Rocky Linux 9
       $default_kernel = '/boot/centos/10-stream/BaseOS/x86_64/os/images/pxeboot/vmlinuz'
@@ -113,5 +102,10 @@ class pxe::grub (
   file { "${net_directory}/boot/grub/grub.cfg":
     ensure  => file,
     content => template('pxe/grub.cfg.erb'),
+  }
+
+  file { "${net_directory}/boot/grub/x86_64-efi/grub.cfg":
+    ensure  => file,
+    content => template('pxe/grub-efi.cfg.erb'),
   }
 }

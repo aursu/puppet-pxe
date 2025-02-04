@@ -16,6 +16,9 @@ class pxe::storage (
   $rocky8_current_version = $pxe::params::rocky8_current_version
   $rocky9_current_version = $pxe::params::rocky9_current_version
 
+  $ubuntu22_current_version = $pxe::params::ubuntu22_current_version
+  $ubuntu24_current_version = $pxe::params::ubuntu24_current_version
+
   # Storage
   file { [
       $storage_directory,
@@ -26,8 +29,8 @@ class pxe::storage (
       "${storage_directory}/rocky/${rocky8_current_version}",
       "${storage_directory}/rocky/${rocky9_current_version}",
       "${storage_directory}/ubuntu",
-      "${storage_directory}/ubuntu/jammy",
-      "${storage_directory}/ubuntu/noble",
+      "${storage_directory}/ubuntu/${ubuntu22_current_version}",
+      "${storage_directory}/ubuntu/${ubuntu24_current_version}",
       "${storage_directory}/configs",
       "${storage_directory}/configs/assets",
     "${storage_directory}/exec"]:
@@ -58,8 +61,8 @@ class pxe::storage (
       "${tftp_root}/boot/rocky/${rocky8_current_version}",
       "${tftp_root}/boot/rocky/${rocky9_current_version}",
       "${tftp_root}/boot/ubuntu",
-      "${tftp_root}/boot/ubuntu/jammy",
-      "${tftp_root}/boot/ubuntu/noble",
+      "${tftp_root}/boot/ubuntu/${ubuntu22_current_version}",
+      "${tftp_root}/boot/ubuntu/${ubuntu24_current_version}",
     ]:
       mode => '0711',
       ;
@@ -77,6 +80,16 @@ class pxe::storage (
   file { ["${tftp_root}/boot/rocky/9", "${storage_directory}/rocky/9"]:
     ensure => link,
     target => $rocky9_current_version,
+  }
+
+  file { ["${tftp_root}/boot/ubuntu/jammy", "${storage_directory}/ubuntu/jammy"]:
+    ensure => link,
+    target => $ubuntu22_current_version,
+  }
+
+  file { ["${tftp_root}/boot/ubuntu/noble", "${storage_directory}/ubuntu/noble"]:
+    ensure => link,
+    target => $ubuntu24_current_version,
   }
 
   unless $storage_directory == '/diskless' {
