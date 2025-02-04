@@ -285,7 +285,7 @@ Puppet::Type.type(:dhcp_host).provide(:ruby, parent: Puppet::Provider) do
     ip         = pxe[:ip]
     hostname   = pxe[:hostname]
 
-    ERB.new(<<-EOF, nil, '<>').result(binding).strip
+    ERB.new(<<-EOF, trim_mode: '<>').result(binding).strip
   host <%= block_name %> {
     hardware ethernet <%= mac %>;
     fixed-address <%= ip %>;
