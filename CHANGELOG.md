@@ -112,3 +112,13 @@ All notable changes to this project will be documented in this file.
 * Corrected TFTP root for Ubuntu inside client_config
 
 **Known Issues**
+
+## Release 0.9.0
+
+**Features**
+
+* Added Ubuntu assets for netbooting
+
+**Bugfixes**
+
+**Known Issues**
