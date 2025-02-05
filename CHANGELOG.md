@@ -113,12 +113,14 @@ All notable changes to this project will be documented in this file.
 
 **Known Issues**
 
-## Release 0.9.0
+## Release 0.9.1
 
 **Features**
 
 * Added Ubuntu assets for netbooting
 
 **Bugfixes**
+
+* Bugfix: No matching entry for selector parameter with value '24.04.1'
 
 **Known Issues**
