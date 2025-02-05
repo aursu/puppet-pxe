@@ -1,7 +1,12 @@
 <% if @ipxe -%>
 #!ipxe
+<% if @centos -%>
 kernel http://<%= @install_server %>/<%= @boot_kernel %> ip=dhcp ksdevice= inst.ks=http://<%= @install_server %>/ks/<%= @ks_filename %><% if @disable_biosdevname %> net.ifnames=0 biosdevname=0<% end %>
 initrd http://<%= @install_server %>/<%= @boot_initimg %>
+<% elsif @ubuntu -%>
+kernel http://<%= @install_server %>/<%= @boot_kernel %> ip=dhcp boot=casper url=http://<%= @install_server %>/ubuntu/<%= @major_version %>/<%= @iso_filename %><% if @disable_biosdevname %> net.ifnames=0 biosdevname=0<% end %>
+initrd http://<%= @install_server %>/<%= @boot_initimg %>
+<% end -%>
 boot
 <%   else -%>
 <% if @boot_kernel -%>
@@ -17,6 +22,8 @@ set options='ksdevice=<%= @interface %> ks=http://<%= @install_server %>/ks/<%= 
 # https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/installation_guide/chap-anaconda-boot-options
 set options='ip=dhcp ksdevice= inst.ks=http://<%= @install_server %>/ks/<%= @ks_filename %><% if @disable_biosdevname %> net.ifnames=0 biosdevname=0<% end %>'
 <%   end -%>
+<% elsif @ubuntu -%>
+set options='ip=dhcp boot=casper url=http://<%= @install_server %>/ubuntu/<%= @major_version %>/<%= @iso_filename %><% if @disable_biosdevname %> net.ifnames=0 biosdevname=0<% end %>'
 <% else -%>
 set options='ip=dhcp<% if @disable_biosdevname %> net.ifnames=0 biosdevname=0<% end %>'
 <% end -%>

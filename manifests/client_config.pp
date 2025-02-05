@@ -10,13 +10,14 @@ define pxe::client_config (
   Stdlib::Fqdn $hostname = $name,
   Optional[Stdlib::Unixpath] $kernel = undef,
   Optional[Stdlib::Unixpath] $initimg = undef,
-  Enum['x86_64', 'i386'] $arch = 'x86_64',
+  Enum['x86_64', 'i386', 'amd64'] $arch = 'x86_64',
   Optional[String] $autofile = undef,
   Optional[String] $osrelease = undef,
   # Only applicable to CentOS 6 systems
   Optional[String] $interface = 'eth0',
   # Kickstart settings
-  Boolean $centos = true,
+  Boolean $centos = false,
+  Boolean $ubuntu = false,
   # https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/sec-disabling_consistent_network_device_naming
   # https://www.freedesktop.org/wiki/Software/systemd/PredictableNetworkInterfaceNames/
   Boolean $disable_biosdevname = true,
@@ -26,78 +27,87 @@ define pxe::client_config (
 
   $tftp_root = $pxe::params::tftp_root
 
-  $default_kernel = '/boot/centos/10-stream/BaseOS/x86_64/os/images/pxeboot/vmlinuz'
-  $default_initimg = '/boot/centos/10-stream/BaseOS/x86_64/os/images/pxeboot/initrd.img'
-
   if $centos {
+    $default_kernel = '/boot/centos/10-stream/BaseOS/x86_64/os/images/pxeboot/vmlinuz'
+    $default_initimg = '/boot/centos/10-stream/BaseOS/x86_64/os/images/pxeboot/initrd.img'
+
     if $osrelease {
       $centos_version = $osrelease ? {
         Pxe::Centos_version => $osrelease,
         default             => fail('Illegal value for $osrelease parameter'),
       }
 
-      case $centos_version {
-        '9-stream', '10-stream': {
-          $major_version = $centos_version
-        }
-        default: {
-          $major_version = $centos_version ? {
-            /^10/ => 10,
-            /^9/ => 9,
-          }
-        }
+      $major_version = $centos_version ? {
+        /^9/    => 9,
+        /^10/   => 10,
+        default => $centos_version, # '9-stream', '10-stream'
       }
     }
     else {
-      $centos_version = undef
-      $major_version = undef
+      $major_version  = 10
     }
 
     if $autofile {
       $ks_filename = $autofile
     }
-    elsif $centos_version {
-      $ks_filename = "${centos_version}-${arch}" ? {
-        '10-x86_64'        => 'default.cfg',
-        '10-stream-x86_64' => 'default.cfg',
+    elsif $major_version {
+      $ks_filename = "${major_version}-${arch}" ? {
         '9-x86_64'         => 'default-9-x86_64.cfg',
         '9-stream-x86_64'  => 'default-9-x86_64.cfg',
-        default            => "default-${centos_version}-${arch}.cfg",
+        default            => 'default.cfg',
       }
     }
     else {
       $ks_filename = 'default.cfg'
     }
   }
+  elsif $ubuntu {
+    $default_kernel  = '/boot/ubuntu/noble/netboot/amd64/vmlinuz'
+    $default_initimg = '/boot/ubuntu/noble/netboot/amd64/initrd'
+
+    if $osrelease {
+      $ubuntu_version = $osrelease ? {
+        Pxe::Ubuntu_version => $osrelease,
+        default             => fail('Illegal value for $osrelease parameter'),
+      }
+
+      $major_version = $ubuntu_version ? {
+        /^22/   => $pxe::params::ubuntu22_current_version,
+        'jammy' => $pxe::params::ubuntu22_current_version,
+        default => $pxe::params::ubuntu24_current_version,
+      }
+    }
+    else {
+      $major_version = $pxe::params::ubuntu24_current_version
+    }
+
+    $iso_filename = "ubuntu-${major_version}-live-server-amd64.iso"
+  }
 
   if $kernel {
     $boot_kernel = $kernel
   }
   elsif $centos and $major_version {
-    $boot_kernel = "/boot/centos/${major_version}/os/${arch}/images/pxeboot/vmlinuz"
+    $boot_kernel = "/boot/centos/${major_version}/BaseOS/${arch}/os/images/pxeboot/vmlinuz"
+  }
+  elsif $ubuntu and $major_version {
+    $boot_kernel = "/boot/ubuntu/${major_version}/netboot/${arch}/vmlinuz"
   }
   else {
-    if $ipxe {
-      $boot_kernel = $default_kernel
-    }
-    else {
-      $boot_kernel = undef
-    }
+    $boot_kernel = $default_kernel
   }
 
   if $initimg {
     $boot_initimg = $initimg
   }
   elsif $centos and $major_version {
-    $boot_initimg = "/boot/centos/${major_version}/os/${arch}/images/pxeboot/initrd.img"
+    $boot_initimg = "/boot/centos/${major_version}/BaseOS/${arch}/os/images/pxeboot/initrd.img"
+  }
+  elsif $ubuntu and $major_version {
+    $boot_initimg = "/boot/ubuntu/${major_version}/netboot/${arch}/initrd"
   }
   else {
-    if $ipxe {
-      $boot_initimg = $default_initimg
-    }
-    else {
-      $boot_initimg = undef
-    }
+    $boot_initimg = $default_initimg
   }
 
   # TODO: iPXE

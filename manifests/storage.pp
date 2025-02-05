@@ -33,6 +33,8 @@ class pxe::storage (
       "${storage_directory}/ubuntu/${ubuntu24_current_version}",
       "${storage_directory}/configs",
       "${storage_directory}/configs/assets",
+      '/mnt/iso',
+      '/mnt/iso/ubuntu',
     "${storage_directory}/exec"]:
       ensure => directory,
       owner  => $user,

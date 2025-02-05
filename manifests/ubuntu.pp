@@ -15,21 +15,50 @@ define pxe::ubuntu (
   $tftp_root = $pxe::params::tftp_root
 
   $release_version = $version ? {
+    '22.04' => $pxe::params::ubuntu22_current_version,
     'jammy' => $pxe::params::ubuntu22_current_version,
+    '24.04' => $pxe::params::ubuntu24_current_version,
     'noble' => $pxe::params::ubuntu24_current_version,
   }
 
-  $base_directory    = "${tftp_root}/boot/ubuntu/${release_version}"
+  $base_directory        = "${tftp_root}/boot/ubuntu/${release_version}"
   $distro_base_directory = "${storage_directory}/ubuntu/${release_version}"
 
-  # https://releases.ubuntu.com/24.04.1/ubuntu-24.04.1-live-server-amd64.iso
-  $ubuntu_url = "https://releases.ubuntu.com/${release_version}/ubuntu-${release_version}-live-server-${arch}.iso"
+  $iso_filename = "ubuntu-${release_version}-live-server-${arch}.iso"
+  $iso_location = "${distro_base_directory}/${iso_filename}"
 
-  $arch_directory        = "${base_directory}/netboot/${arch}"
+  $arch_directory = "${base_directory}/netboot/${arch}"
+  $mount_point    = "/mnt/iso/ubuntu/${release_version}"
 
   file { [
       "${base_directory}/netboot",
-    $arch_directory]:
+      $arch_directory,
+    $mount_point]:
       ensure => directory,
+  }
+
+  $checksum_value = $release_version ? {
+    '22.04.5' => '9bc6028870aef3f74f4e16b900008179e78b130e6b0b9a140635434a46aa98b0',
+    '24.04.1' => 'e240e4b801f7bb68c20d1356b60968ad0c33a41d00d828e74ceb3364a0317be9',
+  }
+
+  # https://releases.ubuntu.com/24.04.1/ubuntu-24.04.1-live-server-amd64.iso
+  file { $iso_location:
+    ensure         => 'file',
+    checksum       => 'sha256',
+    checksum_value => $checksum_value,
+    source         => "https://releases.ubuntu.com/${release_version}/${iso_filename}",
+  }
+  -> mount { $mount_point:
+    ensure  => mounted,
+    fstype  => 'iso9660',
+    options => 'defaults,ro',
+    device  => $iso_location,
+  }
+  -> file { "${arch_directory}/vmlinuz":
+    source => "file://${mount_point}/casper/vmlinuz",
+  }
+  -> file { "${arch_directory}/initrd":
+    source => "file://${mount_point}/casper/initrd",
   }
 }

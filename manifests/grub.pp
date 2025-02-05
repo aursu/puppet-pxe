@@ -10,6 +10,9 @@ class pxe::grub (
 ) inherits pxe::params {
   include bsys::params
 
+  $default_kernel = '/boot/ubuntu/noble/casper/vmlinuz'
+  $default_initimg = '/boot/ubuntu/noble/casper/initrd'
+
   case $bsys::params::osfam {
     'Debian': {
       # GRUB2 Modules installation
@@ -41,9 +44,6 @@ class pxe::grub (
         creates => "${net_directory}/boot/grub/i386-efi/core.efi",
         require => Package['grub-efi-ia32-bin'],
       }
-
-      $default_kernel = '/boot/ubuntu/noble/casper/vmlinuz'
-      $default_initimg = '/boot/ubuntu/noble/casper/initrd'
     }
     'RedHat': {
       # GRUB2 Modules installation
@@ -92,10 +92,6 @@ class pxe::grub (
       # /boot/grub/i386-pc/grub.cfg-0
       # /boot/grub/i386-pc/grub.cfg
       # /boot/grub/grub.cfg
-
-      # TODO: move accent to CentOS Stream 10 or Rocky Linux 9
-      $default_kernel = '/boot/centos/10-stream/BaseOS/x86_64/os/images/pxeboot/vmlinuz'
-      $default_initimg = '/boot/centos/10-stream/BaseOS/x86_64/os/images/pxeboot/initrd.img'
     }
   }
 
