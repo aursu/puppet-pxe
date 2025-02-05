@@ -4,7 +4,7 @@ echo Content-type: text/html
 echo ""
 
 PXELIBDIR=/var/lib/pxe
-TFTPROOT=/var/lib/tftpboot
+TFTPROOT=<%= @tftp_root %>
 CONFDIR=boot/install
 
 if [ -z "$QUERY_STRING" ]; then

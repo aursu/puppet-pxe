@@ -28,6 +28,8 @@ define pxe::client_config (
   $tftp_root = $pxe::params::tftp_root
 
   if $centos {
+    $pxe_arch = $arch
+
     $default_kernel = '/boot/centos/10-stream/BaseOS/x86_64/os/images/pxeboot/vmlinuz'
     $default_initimg = '/boot/centos/10-stream/BaseOS/x86_64/os/images/pxeboot/initrd.img'
 
@@ -62,6 +64,12 @@ define pxe::client_config (
     }
   }
   elsif $ubuntu {
+    $pxe_arch = $arch ? {
+      'x86_64' => 'amd64',
+      'i386'   => 'amd64',
+      default  => $arch,
+    }
+
     $default_kernel  = '/boot/ubuntu/noble/netboot/amd64/vmlinuz'
     $default_initimg = '/boot/ubuntu/noble/netboot/amd64/initrd'
 
@@ -88,10 +96,10 @@ define pxe::client_config (
     $boot_kernel = $kernel
   }
   elsif $centos and $major_version {
-    $boot_kernel = "/boot/centos/${major_version}/BaseOS/${arch}/os/images/pxeboot/vmlinuz"
+    $boot_kernel = "/boot/centos/${major_version}/BaseOS/${pxe_arch}/os/images/pxeboot/vmlinuz"
   }
   elsif $ubuntu and $major_version {
-    $boot_kernel = "/boot/ubuntu/${major_version}/netboot/${arch}/vmlinuz"
+    $boot_kernel = "/boot/ubuntu/${major_version}/netboot/${pxe_arch}/vmlinuz"
   }
   else {
     $boot_kernel = $default_kernel
@@ -101,10 +109,10 @@ define pxe::client_config (
     $boot_initimg = $initimg
   }
   elsif $centos and $major_version {
-    $boot_initimg = "/boot/centos/${major_version}/BaseOS/${arch}/os/images/pxeboot/initrd.img"
+    $boot_initimg = "/boot/centos/${major_version}/BaseOS/${pxe_arch}/os/images/pxeboot/initrd.img"
   }
   elsif $ubuntu and $major_version {
-    $boot_initimg = "/boot/ubuntu/${major_version}/netboot/${arch}/initrd"
+    $boot_initimg = "/boot/ubuntu/${major_version}/netboot/${pxe_arch}/initrd"
   }
   else {
     $boot_initimg = $default_initimg

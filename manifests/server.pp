@@ -46,7 +46,7 @@ class pxe::server (
   # CGI trigger for host installation
   file { "${storage_directory}/exec/move.cgi":
     ensure  => file,
-    content => file('pxe/scripts/move.cgi'),
+    content => template('pxe/scripts/move.cgi.erb'),
     mode    => '0755',
   }
 

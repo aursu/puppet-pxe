@@ -113,11 +113,12 @@ All notable changes to this project will be documented in this file.
 
 **Known Issues**
 
-## Release 0.9.1
+## Release 0.9.2
 
 **Features**
 
 * Added Ubuntu assets for netbooting
+* Fixed CGI move script
 
 **Bugfixes**
 
