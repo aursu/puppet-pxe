@@ -10,8 +10,8 @@ class pxe::grub (
 ) inherits pxe::params {
   include bsys::params
 
-  $default_kernel = '/boot/ubuntu/noble/casper/vmlinuz'
-  $default_initimg = '/boot/ubuntu/noble/casper/initrd'
+  $default_kernel  = '/boot/ubuntu/noble/netboot/amd64/vmlinuz'
+  $default_initimg = '/boot/ubuntu/noble/netboot/amd64/initrd'
 
   case $bsys::params::osfam {
     'Debian': {
