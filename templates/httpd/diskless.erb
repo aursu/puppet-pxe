@@ -4,6 +4,7 @@
     Alias /ubuntu <%= @storage_directory %>/ubuntu
     Alias /ks     <%= @storage_directory %>/configs
     Alias /boot   <%= @tftp_root %>/boot
+    Alias /autoinstall <%= @storage_directory %>/configs/ubuntu
 
     <Directory "<%= @storage_directory %>">
         Require all granted

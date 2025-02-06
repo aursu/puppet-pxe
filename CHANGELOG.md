@@ -125,3 +125,13 @@ All notable changes to this project will be documented in this file.
 * Bugfix: No matching entry for selector parameter with value '24.04.1'
 
 **Known Issues**
+
+## Release 0.10.0
+
+**Features**
+
+* Added Ubuntu autoinstallation script
+
+**Bugfixes**
+
+**Known Issues**

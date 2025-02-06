@@ -90,6 +90,15 @@ define pxe::client_config (
     }
 
     $iso_filename = "ubuntu-${major_version}-live-server-amd64.iso"
+
+    # Defines the relative path to the folder where the `user-data` automation file is located.
+    # The path is relative to ${storage_directory}/configs/ubuntu.
+    $autofile_path = $autofile ? {
+      Pxe::Ubuntu_version => $major_version,  # If `$autofile` is an Ubuntu version (e.g., 'noble', 'jammy', '22.04', '24.04'), use `$major_version`.
+      String              => $autofile,       # If `$autofile` is a custom path, assume it is inside:
+                                              # `${storage_directory}/configs/ubuntu/${major_version}/${autofile}/`
+      default             => undef,           # If no valid value is provided, set `undef`.
+    }
   }
 
   if $kernel {

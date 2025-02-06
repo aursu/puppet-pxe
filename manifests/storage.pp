@@ -33,6 +33,9 @@ class pxe::storage (
       "${storage_directory}/ubuntu/${ubuntu24_current_version}",
       "${storage_directory}/configs",
       "${storage_directory}/configs/assets",
+      "${storage_directory}/configs/ubuntu",
+      "${storage_directory}/configs/ubuntu/${ubuntu22_current_version}",
+      "${storage_directory}/configs/ubuntu/${ubuntu24_current_version}",
       '/mnt/iso',
       '/mnt/iso/ubuntu',
     "${storage_directory}/exec"]:
@@ -84,14 +87,18 @@ class pxe::storage (
     target => $rocky9_current_version,
   }
 
-  file { ["${tftp_root}/boot/ubuntu/jammy", "${storage_directory}/ubuntu/jammy"]:
-    ensure => link,
-    target => $ubuntu22_current_version,
+  file { ["${tftp_root}/boot/ubuntu/jammy", "${storage_directory}/ubuntu/jammy",
+      "${tftp_root}/boot/ubuntu/22.04", "${storage_directory}/ubuntu/22.04",
+    "${storage_directory}/configs/ubuntu/22.04", "${storage_directory}/configs/ubuntu/jammy"]:
+      ensure => link,
+      target => $ubuntu22_current_version,
   }
 
-  file { ["${tftp_root}/boot/ubuntu/noble", "${storage_directory}/ubuntu/noble"]:
-    ensure => link,
-    target => $ubuntu24_current_version,
+  file { ["${tftp_root}/boot/ubuntu/noble", "${storage_directory}/ubuntu/noble",
+      "${tftp_root}/boot/ubuntu/24.04", "${storage_directory}/ubuntu/24.04",
+    "${storage_directory}/configs/ubuntu/24.04", "${storage_directory}/configs/ubuntu/noble"]:
+      ensure => link,
+      target => $ubuntu24_current_version,
   }
 
   unless $storage_directory == '/diskless' {

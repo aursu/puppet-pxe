@@ -129,4 +129,15 @@ class pxe::server (
     ensure  => file,
     content => template('pxe/default-centos-8-x86_64-ks.cfg.erb'),
   }
+
+  # Ubuntu (only 24.04; TODO: 22.04)
+  file { "${storage_directory}/configs/ubuntu/noble/user-data":
+    ensure  => file,
+    content => file('pxe/cloud-init/noble.user-data'),
+  }
+
+  file { "${storage_directory}/configs/ubuntu/noble/meta-data":
+    ensure  => file,
+    content => '',
+  }
 }
