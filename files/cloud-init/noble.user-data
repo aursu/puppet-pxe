@@ -33,15 +33,9 @@ autoinstall:
     install: false
   identity:
     hostname: localhost
+    password: $6$kp.Nx6z3k5uaGKMu$MvlqbvyUhEK2RK0PdpKPthivLF4VuwLwpcHfKax0Zoa87nOz3GU0/x/w8pJsaRcjExOOCZtuD1aiZ2O2v0a.D1
+    realname: Alexander Ursu
     username: aursu
-  users:
-    - username: aursu
-      password: $6$kp.Nx6z3k5uaGKMu$MvlqbvyUhEK2RK0PdpKPthivLF4VuwLwpcHfKax0Zoa87nOz3GU0/x/w8pJsaRcjExOOCZtuD1aiZ2O2v0a.D1
-      realname: Alexander Ursu
-      groups: sudo
-      shell: /bin/bash
-      ssh_authorized_keys:
-        - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCfk/8Jt+HcqZ/qFPTFU0aUeORDGMLnRpgHG/LPLPO9OGPv1ZKPNenFT0r2Ywpyb/F+QK0CbUzjoFtmW7lW9cDMo43Y4nBSLhMsq0V/CSjbwbUkR0PbPtYxAy28QCpgvNnY2spZ3mbktBXHHG6N3wnI9hBTJNwyQfZYzvMMPYyQLtEUPVOP2T4XQitiXtqtvTAVWaKDvr9YkNCzSAGWfcLWocWlvn7efMnt35xlQzGxn/NvJbVD/8FioPMsOqyViN1r0JDJrrtcRPZqnjKBHwPnNANbNL2Isd684tWi9X2VC3PB4UfmVmEULsLCdXC/+qXhHt9mnD5t4M9+oVD/TxKX aursu
   kernel:
     package: linux-generic
   keyboard:
@@ -67,6 +61,8 @@ autoinstall:
   ssh:
     allow-pw: true
     install-server: true
+    authorized-keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCfk/8Jt+HcqZ/qFPTFU0aUeORDGMLnRpgHG/LPLPO9OGPv1ZKPNenFT0r2Ywpyb/F+QK0CbUzjoFtmW7lW9cDMo43Y4nBSLhMsq0V/CSjbwbUkR0PbPtYxAy28QCpgvNnY2spZ3mbktBXHHG6N3wnI9hBTJNwyQfZYzvMMPYyQLtEUPVOP2T4XQitiXtqtvTAVWaKDvr9YkNCzSAGWfcLWocWlvn7efMnt35xlQzGxn/NvJbVD/8FioPMsOqyViN1r0JDJrrtcRPZqnjKBHwPnNANbNL2Isd684tWi9X2VC3PB4UfmVmEULsLCdXC/+qXhHt9mnD5t4M9+oVD/TxKX aursu
   storage:
     config:
     - id: disk-0

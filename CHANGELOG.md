@@ -126,7 +126,7 @@ All notable changes to this project will be documented in this file.
 
 **Known Issues**
 
-## Release 0.10.1
+## Release 0.10.2
 
 **Features**
 
@@ -134,5 +134,7 @@ All notable changes to this project will be documented in this file.
 * Added ability to just enable autoinstall (to default settings)
 
 **Bugfixes**
+
+* Corrected user-data autoinstall script
 
 **Known Issues**

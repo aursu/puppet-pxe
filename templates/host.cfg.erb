@@ -5,9 +5,9 @@ kernel http://<%= @install_server %>/<%= @boot_kernel %> ip=dhcp ksdevice= inst.
 initrd http://<%= @install_server %>/<%= @boot_initimg %>
 <% elsif @ubuntu -%>
 <% if @autofile_path == @major_version %>
-kernel http://<%= @install_server %>/<%= @boot_kernel %> ip=dhcp boot=casper url=http://<%= @install_server %>/ubuntu/<%= @major_version %>/<%= @iso_filename %> ds=nocloud-net;s=http://<%= @install_server %>/autoinstall/<%= @major_version %>/<% if @disable_biosdevname %> net.ifnames=0 biosdevname=0<% end %>
+kernel http://<%= @install_server %>/<%= @boot_kernel %> ip=dhcp boot=casper url=http://<%= @install_server %>/ubuntu/<%= @major_version %>/<%= @iso_filename %> autoinstall ds=nocloud-net;s=http://<%= @install_server %>/autoinstall/<%= @major_version %>/<% if @disable_biosdevname %> net.ifnames=0 biosdevname=0<% end %>
 <% elsif @autofile_path -%>
-kernel http://<%= @install_server %>/<%= @boot_kernel %> ip=dhcp boot=casper url=http://<%= @install_server %>/ubuntu/<%= @major_version %>/<%= @iso_filename %> ds=nocloud-net;s=http://<%= @install_server %>/autoinstall/<%= @major_version %>/<%= @autofile_path %>/<% if @disable_biosdevname %> net.ifnames=0 biosdevname=0<% end %>
+kernel http://<%= @install_server %>/<%= @boot_kernel %> ip=dhcp boot=casper url=http://<%= @install_server %>/ubuntu/<%= @major_version %>/<%= @iso_filename %> autoinstall ds=nocloud-net;s=http://<%= @install_server %>/autoinstall/<%= @major_version %>/<%= @autofile_path %>/<% if @disable_biosdevname %> net.ifnames=0 biosdevname=0<% end %>
 <% else -%>
 kernel http://<%= @install_server %>/<%= @boot_kernel %> ip=dhcp boot=casper url=http://<%= @install_server %>/ubuntu/<%= @major_version %>/<%= @iso_filename %><% if @disable_biosdevname %> net.ifnames=0 biosdevname=0<% end %>
 <% end -%>
@@ -26,9 +26,9 @@ set initimg='<%= @boot_initimg %>'
 set options='ip=dhcp ksdevice= inst.ks=http://<%= @install_server %>/ks/<%= @ks_filename %><% if @disable_biosdevname %> net.ifnames=0 biosdevname=0<% end %>'
 <% elsif @ubuntu -%>
 <%   if @autofile_path == @major_version %>
-set options='ip=dhcp boot=casper url=http://<%= @install_server %>/ubuntu/<%= @major_version %>/<%= @iso_filename %> ds=nocloud-net;s=http://<%= @install_server %>/autoinstall/<%= @major_version %>/<% if @disable_biosdevname %> net.ifnames=0 biosdevname=0<% end %>'
+set options='ip=dhcp boot=casper url=http://<%= @install_server %>/ubuntu/<%= @major_version %>/<%= @iso_filename %> autoinstall ds=nocloud-net;s=http://<%= @install_server %>/autoinstall/<%= @major_version %>/<% if @disable_biosdevname %> net.ifnames=0 biosdevname=0<% end %>'
 <%   elsif @autofile_path -%>
-set options='ip=dhcp boot=casper url=http://<%= @install_server %>/ubuntu/<%= @major_version %>/<%= @iso_filename %> ds=nocloud-net;s=http://<%= @install_server %>/autoinstall/<%= @major_version %>/<%= @autofile_path %>/<% if @disable_biosdevname %> net.ifnames=0 biosdevname=0<% end %>'
+set options='ip=dhcp boot=casper url=http://<%= @install_server %>/ubuntu/<%= @major_version %>/<%= @iso_filename %> autoinstall ds=nocloud-net;s=http://<%= @install_server %>/autoinstall/<%= @major_version %>/<%= @autofile_path %>/<% if @disable_biosdevname %> net.ifnames=0 biosdevname=0<% end %>'
 <%   else -%>
 set options='ip=dhcp boot=casper url=http://<%= @install_server %>/ubuntu/<%= @major_version %>/<%= @iso_filename %><% if @disable_biosdevname %> net.ifnames=0 biosdevname=0<% end %>'
 <%   end -%>
