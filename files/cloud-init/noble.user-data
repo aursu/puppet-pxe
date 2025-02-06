@@ -33,6 +33,7 @@ autoinstall:
     install: false
   identity:
     hostname: localhost
+    username: aursu
   users:
     - username: aursu
       password: $6$kp.Nx6z3k5uaGKMu$MvlqbvyUhEK2RK0PdpKPthivLF4VuwLwpcHfKax0Zoa87nOz3GU0/x/w8pJsaRcjExOOCZtuD1aiZ2O2v0a.D1
@@ -50,7 +51,7 @@ autoinstall:
   locale: en_US.UTF-8
   network:
     ethernets:
-      default:
+      all:
         dhcp-identifier: mac
         dhcp4: true
         dhcp4-overrides:
@@ -65,7 +66,6 @@ autoinstall:
     search_drivers: false
   ssh:
     allow-pw: true
-    authorized-keys: []
     install-server: true
   storage:
     config:
