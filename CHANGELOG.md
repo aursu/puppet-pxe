@@ -138,3 +138,13 @@ All notable changes to this project will be documented in this file.
 * Corrected user-data autoinstall script
 
 **Known Issues**
+
+## Release 0.11.0
+
+**Features**
+
+* Added Ubuntu autoinstall script setup per server
+
+**Bugfixes**
+
+**Known Issues**

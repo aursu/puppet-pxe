@@ -12,9 +12,9 @@ define pxe::client_config (
   Optional[Stdlib::Unixpath] $initimg = undef,
   Enum['x86_64', 'i386', 'amd64'] $arch = 'x86_64',
   Variant[Optional[String], Boolean] $autofile = false,
+  Optional[String] $autofile_content = undef, # Ubuntu; TODO: CentOS
+  Optional[String] $autofile_template = undef, # Ubuntu; TODO: CentOS
   Optional[String] $osrelease = undef,
-  # Only applicable to CentOS 6 systems
-  Optional[String] $interface = 'eth0',
   # Kickstart settings
   Boolean $centos = false,
   Boolean $ubuntu = false,
@@ -26,6 +26,7 @@ define pxe::client_config (
   include pxe::params
 
   $tftp_root = $pxe::params::tftp_root
+  $storage_directory  = $pxe::params::storage_directory
 
   if $centos {
     $pxe_arch = $arch
@@ -151,5 +152,52 @@ define pxe::client_config (
     refreshonly => true,
     path        => '/usr/bin:/bin',
     onlyif      => "test -f ${tftp_root}/boot/install/${hostname}.cfg",
+  }
+
+  if $ubuntu and $autofile_path {
+    if $autofile_content and $autofile_template {
+      fail('Either autofile_content or autofile_template parameter could be set. Not both')
+    }
+    elsif $autofile_template {
+      # install_server
+      # tftp_root
+      # storage_directory
+      # hostname
+      # kernel
+      # boot_kernel
+      # default_kernel
+      # initimg
+      # boot_initimg
+      # default_initimg
+      # arch
+      # pxe_arch
+      # autofile_path
+      # osrelease
+      # major_version
+      # iso_filename
+      $autofile_content_data = template($autofile_template)
+    }
+    elsif $autofile_content {
+      $autofile_content_data = $autofile_content
+    }
+    else {
+      $autofile_content_data = undef
+    }
+
+    if $autofile_content_data {
+      file { "${storage_directory}/configs/ubuntu/${major_version}/${autofile_path}":
+        ensure  => directory,
+      }
+
+      file { "${storage_directory}/configs/ubuntu/${major_version}/${autofile_path}/user-data":
+        ensure  => file,
+        content => $autofile_content_data,
+      }
+
+      file { "${storage_directory}/configs/ubuntu/${major_version}/${autofile_path}/meta-data":
+        ensure  => file,
+        content => '',
+      }
+    }
   }
 }
