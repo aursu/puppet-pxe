@@ -126,11 +126,12 @@ All notable changes to this project will be documented in this file.
 
 **Known Issues**
 
-## Release 0.10.0
+## Release 0.10.1
 
 **Features**
 
-* Added Ubuntu autoinstallation script
+* Added Ubuntu autoinstall script
+* Added ability to just enable autoinstall (to default settings)
 
 **Bugfixes**
 

@@ -11,7 +11,7 @@ define pxe::client_config (
   Optional[Stdlib::Unixpath] $kernel = undef,
   Optional[Stdlib::Unixpath] $initimg = undef,
   Enum['x86_64', 'i386', 'amd64'] $arch = 'x86_64',
-  Optional[String] $autofile = undef,
+  Variant[Optional[String], Boolean] $autofile = false,
   Optional[String] $osrelease = undef,
   # Only applicable to CentOS 6 systems
   Optional[String] $interface = 'eth0',
@@ -49,16 +49,20 @@ define pxe::client_config (
       $major_version  = 10
     }
 
-    if $autofile {
+    # If `$autofile` is a String, use it directly as the kickstart filename.
+    if $autofile =~ String {
       $ks_filename = $autofile
     }
-    elsif $major_version {
+    # If `$autofile` is a Boolean `true` and `$major_version` is set, determine
+    # the kickstart file based on OS version and architecture.
+    elsif $autofile and $major_version {
       $ks_filename = "${major_version}-${arch}" ? {
-        '9-x86_64'         => 'default-9-x86_64.cfg',
-        '9-stream-x86_64'  => 'default-9-x86_64.cfg',
-        default            => 'default.cfg',
+        '9-x86_64'        => 'default-9-x86_64.cfg',  # CentOS 9 if specified as '9'
+        '9-stream-x86_64' => 'default-9-x86_64.cfg',  # CentOS 9 Stream also uses the same config.
+        default           => 'default.cfg',           # Any other version/arch uses 'default.cfg'.
       }
     }
+    # If `$autofile` is `false`, fallback to the default Kickstart configuration.
     else {
       $ks_filename = 'default.cfg'
     }
@@ -95,6 +99,7 @@ define pxe::client_config (
     # The path is relative to ${storage_directory}/configs/ubuntu.
     $autofile_path = $autofile ? {
       Pxe::Ubuntu_version => $major_version,  # If `$autofile` is an Ubuntu version (e.g., 'noble', 'jammy', '22.04', '24.04'), use `$major_version`.
+      true                => $major_version,
       String              => $autofile,       # If `$autofile` is a custom path, assume it is inside:
                                               # `${storage_directory}/configs/ubuntu/${major_version}/${autofile}/`
       default             => undef,           # If no valid value is provided, set `undef`.
