@@ -4,5 +4,6 @@ type Pxe::Ubuntu_version = Enum[
   'jammy',
   '24.04',
   '24.04.1',
+  '24.04.2',
   'noble'
 ]

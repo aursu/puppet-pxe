@@ -139,11 +139,12 @@ All notable changes to this project will be documented in this file.
 
 **Known Issues**
 
-## Release 0.11.0
+## Release 0.12.0
 
 **Features**
 
 * Added Ubuntu autoinstall script setup per server
+* Added version 24.04.2
 
 **Bugfixes**
 

@@ -13,7 +13,7 @@ class pxe::params {
   $rocky9_current_version = '9.5'
 
   $ubuntu22_current_version = '22.04.5'
-  $ubuntu24_current_version = '24.04.1'
+  $ubuntu24_current_version = '24.04.2'
 
   case $bsys::params::osfam {
     'RedHat': {

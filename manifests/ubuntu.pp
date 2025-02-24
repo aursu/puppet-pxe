@@ -15,9 +15,10 @@ define pxe::ubuntu (
   $tftp_root = $pxe::params::tftp_root
 
   $release_version = $version ? {
-    '22.04' => $pxe::params::ubuntu22_current_version,
-    'jammy' => $pxe::params::ubuntu22_current_version,
-    default => $pxe::params::ubuntu24_current_version,
+    '22.04'   => $pxe::params::ubuntu22_current_version,
+    'jammy'   => $pxe::params::ubuntu22_current_version,
+    '24.04.1' => $version,
+    default   => $pxe::params::ubuntu24_current_version,
   }
 
   $base_directory        = "${tftp_root}/boot/ubuntu/${release_version}"
@@ -39,14 +40,23 @@ define pxe::ubuntu (
   $checksum_value = $release_version ? {
     '22.04.5' => '9bc6028870aef3f74f4e16b900008179e78b130e6b0b9a140635434a46aa98b0',
     '24.04.1' => 'e240e4b801f7bb68c20d1356b60968ad0c33a41d00d828e74ceb3364a0317be9',
+    '24.04.2' => 'd6dab0c3a657988501b4bd76f1297c053df710e06e0c3aece60dead24f270b4d',
   }
 
-  # https://releases.ubuntu.com/24.04.1/ubuntu-24.04.1-live-server-amd64.iso
+  # https://releases.ubuntu.com/24.04.2/ubuntu-24.04.2-live-server-amd64.iso
+  if $release_version in [$pxe::params::ubuntu22_current_version, $pxe::params::ubuntu24_current_version] {
+    $release_source = "https://releases.ubuntu.com/${release_version}/${iso_filename}"
+  }
+  # https://old-releases.ubuntu.com/releases/24.04.1/ubuntu-24.04.1-live-server-amd64.iso
+  else {
+    $release_source = "https://old-releases.ubuntu.com/releases/${release_version}/${iso_filename}"
+  }
+
   file { $iso_location:
     ensure         => 'file',
     checksum       => 'sha256',
     checksum_value => $checksum_value,
-    source         => "https://releases.ubuntu.com/${release_version}/${iso_filename}",
+    source         => $release_source,
   }
   -> mount { $mount_point:
     ensure  => mounted,
