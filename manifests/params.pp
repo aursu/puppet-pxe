@@ -10,10 +10,11 @@ class pxe::params {
   $storage_directory = lookup('pxe::params::storage_directory', Stdlib::Unixpath, 'first', '/diskless')
 
   $rocky8_current_version = '8.10'
-  $rocky9_current_version = '9.5'
+  $rocky9_current_version = '9.6'
+  $rocky10_current_version = '10.0'
 
   $ubuntu22_current_version = '22.04.5'
-  $ubuntu24_current_version = '24.04.1'
+  $ubuntu24_current_version = '24.04.3'
 
   case $bsys::params::osfam {
     'RedHat': {

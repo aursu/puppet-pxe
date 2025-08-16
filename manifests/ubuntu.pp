@@ -39,6 +39,8 @@ define pxe::ubuntu (
   $checksum_value = $release_version ? {
     '22.04.5' => '9bc6028870aef3f74f4e16b900008179e78b130e6b0b9a140635434a46aa98b0',
     '24.04.1' => 'e240e4b801f7bb68c20d1356b60968ad0c33a41d00d828e74ceb3364a0317be9',
+    '24.04.2' => 'd6dab0c3a657988501b4bd76f1297c053df710e06e0c3aece60dead24f270b4d',
+    '24.04.3' => 'c3514bf0056180d09376462a7a1b4f213c1d6e8ea67fae5c25099c6fd3d8274b',
   }
 
   # https://releases.ubuntu.com/24.04.1/ubuntu-24.04.1-live-server-amd64.iso
