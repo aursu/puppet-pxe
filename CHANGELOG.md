@@ -138,3 +138,13 @@ All notable changes to this project will be documented in this file.
 * Corrected user-data autoinstall script
 
 **Known Issues**
+
+## Release 0.10.3
+
+**Features**
+
+* Added Rocky Linux 10 storage management
+
+**Bugfixes**
+
+**Known Issues**

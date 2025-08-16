@@ -1,6 +1,6 @@
 {
   "name": "aursu-pxe",
-  "version": "0.10.2",
+  "version": "0.10.3",
   "author": "aursu",
   "summary": "Setup PXE environment",
   "license": "Apache-2.0",
