@@ -145,6 +145,7 @@ All notable changes to this project will be documented in this file.
 
 * Added Ubuntu autoinstall script setup per server
 * Added version 24.04.2
+* Added Rocky Linux 10 storage management
 
 **Bugfixes**
 

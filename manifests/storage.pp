@@ -6,6 +6,7 @@
 #   include pxe::storage
 class pxe::storage (
   Boolean $setup_tftp_root = false,
+  Boolean $manage_storage_directory = true,
   Stdlib::Unixpath $tftp_root = $pxe::params::tftp_root,
 ) inherits pxe::params {
   include apache::params
@@ -15,19 +16,35 @@ class pxe::storage (
 
   $rocky8_current_version = $pxe::params::rocky8_current_version
   $rocky9_current_version = $pxe::params::rocky9_current_version
+  $rocky10_current_version = $pxe::params::rocky10_current_version
 
   $ubuntu22_current_version = $pxe::params::ubuntu22_current_version
   $ubuntu24_current_version = $pxe::params::ubuntu24_current_version
 
+  if $manage_storage_directory {
+    file { $storage_directory:
+      ensure => directory,
+      owner  => $user,
+      mode   => '0511',
+    }
+  }
+  else {
+    exec { "create ${storage_directory}":
+      command => "mkdir -p ${storage_directory}",
+      path    => ['/usr/bin', '/bin'],
+      creates => $storage_directory,
+    }
+  }
+
   # Storage
   file { [
-      $storage_directory,
       "${storage_directory}/centos",
       "${storage_directory}/centos/9-stream",
       "${storage_directory}/centos/10-stream",
       "${storage_directory}/rocky",
       "${storage_directory}/rocky/${rocky8_current_version}",
       "${storage_directory}/rocky/${rocky9_current_version}",
+      "${storage_directory}/rocky/${rocky10_current_version}",
       "${storage_directory}/ubuntu",
       "${storage_directory}/ubuntu/${ubuntu22_current_version}",
       "${storage_directory}/ubuntu/${ubuntu24_current_version}",
@@ -65,6 +82,7 @@ class pxe::storage (
       "${tftp_root}/boot/rocky",
       "${tftp_root}/boot/rocky/${rocky8_current_version}",
       "${tftp_root}/boot/rocky/${rocky9_current_version}",
+      "${tftp_root}/boot/rocky/${rocky10_current_version}",
       "${tftp_root}/boot/ubuntu",
       "${tftp_root}/boot/ubuntu/${ubuntu22_current_version}",
       "${tftp_root}/boot/ubuntu/${ubuntu24_current_version}",
@@ -87,6 +105,11 @@ class pxe::storage (
     target => $rocky9_current_version,
   }
 
+  file { ["${tftp_root}/boot/rocky/10", "${storage_directory}/rocky/10"]:
+    ensure => link,
+    target => $rocky10_current_version,
+  }
+
   file { ["${tftp_root}/boot/ubuntu/jammy", "${storage_directory}/ubuntu/jammy",
       "${tftp_root}/boot/ubuntu/22.04", "${storage_directory}/ubuntu/22.04",
     "${storage_directory}/configs/ubuntu/22.04", "${storage_directory}/configs/ubuntu/jammy"]:
@@ -101,10 +124,12 @@ class pxe::storage (
       target => $ubuntu24_current_version,
   }
 
-  unless $storage_directory == '/diskless' {
-    file { '/diskless':
-      ensure => link,
-      target => $storage_directory,
+  if $manage_storage_directory {
+    unless $storage_directory == '/diskless' {
+      file { '/diskless':
+        ensure => link,
+        target => $storage_directory,
+      }
     }
   }
 }
