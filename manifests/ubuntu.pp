@@ -17,7 +17,7 @@ define pxe::ubuntu (
   $release_version = $version ? {
     '22.04'   => $pxe::params::ubuntu22_current_version,
     'jammy'   => $pxe::params::ubuntu22_current_version,
-    '24.04.1' => $version,
+    '24.04.3' => $version,
     default   => $pxe::params::ubuntu24_current_version,
   }
 
