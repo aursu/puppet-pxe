@@ -139,13 +139,23 @@ All notable changes to this project will be documented in this file.
 
 **Known Issues**
 
-## Release 0.12.0
+## Release 0.10.3
 
 **Features**
 
 * Added Ubuntu autoinstall script setup per server
 * Added version 24.04.2
 * Added Rocky Linux 10 storage management
+
+**Bugfixes**
+
+**Known Issues**
+
+## Release 0.10.4
+
+**Features**
+
+* Added version 24.04.3
 
 **Bugfixes**
 
