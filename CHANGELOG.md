@@ -160,3 +160,31 @@ All notable changes to this project will be documented in this file.
 **Bugfixes**
 
 **Known Issues**
+
+## Release 0.10.5
+
+**Features**
+
+* New class `pxe::decommission` - the inverse of `pxe::server`. Purges the TFTP,
+  iPXE, DHCP and web packages this module installs, unmounts the installer ISOs
+  and deletes the storage, TFTP and ISO trees, so a retired PXE server keeps
+  nothing behind.
+
+  Unmounting happens before deletion: `pxe::ubuntu` mounts installer ISOs under
+  `/mnt/iso`, and those ISO files live inside the storage directory, so deleting
+  either while still mounted would leave stale mounts.
+
+  Removal uses guarded `rm -rf` rather than recursive file resources - these
+  trees hold distribution mirrors and ISO images, and recursing several GB
+  through Puppet's file type is prohibitively slow for a one-off removal.
+
+  No Service resources are declared: purging stops and disables the units, and a
+  Service resource naming a unit that no longer exists fails on every later run.
+
+  `nginx` is never touched - `pxe::nginx` only declares a vhost and never
+  installs the package - and `nmap` is left alone unless `remove_nmap` is set.
+
+**Bugfixes**
+
+**Known Issues**
+
