@@ -21,6 +21,14 @@ fixtures:
     dhcp:
       repo: "puppet/dhcp"
       ref: "6.1.0"
+    # ⚠ `mount` is a CORE type that lives in a module since Puppet 6. It is
+    # bundled in AIO, so pxe::ubuntu's mount resource works on a real host --
+    # but it is absent from the rspec fixture environment, where it fails with
+    # `Unknown resource type: 'mount'`. Same trap as yumrepo_core below, and as
+    # cron_core elsewhere. It is NOT a metadata dependency.
+    mount_core:
+      repo: "puppetlabs/mount_core"
+      ref: "2.0.1"
     nginx:
       repo: "aursu/nginx"
       ref: "6.0.2"

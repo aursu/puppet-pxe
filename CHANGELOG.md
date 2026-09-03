@@ -188,3 +188,18 @@ All notable changes to this project will be documented in this file.
 
 **Known Issues**
 
+## Release 0.11.0
+
+**Bugfixes**
+
+* ⚠⚠ **`pxe::decommission` left the installer ISO fstab entries behind, which makes a host unbootable.** It unmounted the ISOs with a raw `umount` exec — but `umount` is **not** the inverse of a `mount` resource. `pxe::ubuntu` declares them with `ensure => mounted`, which writes an `/etc/fstab` entry *as well as* mounting; unmounting dropped the mount and left the entry pointing at an ISO file the same class then deleted. The host survived until its next restart and then failed `local-fs.target` and dropped to **emergency mode**.
+
+  Measured: a GitLab host decommissioned on 2026-09-01 passed every check, then did not come back from a reboot two days later — with no console available to recover it. `systemctl --failed` on the console named it directly: `mnt-iso-ubuntu-24.04.2.mount` and `mnt-iso-ubuntu-24.04.3.mount`, both `status=32`, against `/diskless` paths that no longer existed.
+
+  Replaced with `mount { … ensure => absent }`, which unmounts **and** removes the fstab entry — the actual inverse. The new `iso_mounts` parameter names the mount points to retire, and the ordering collector became `Mount<| … |>` so the unmount-before-delete guarantee is preserved: the ISO files these mounts read from live inside the tree the removal execs delete.
+
+  ⚠ **The default only covers the releases this module currently tracks.** The host that was lost had both `24.04.3` and a stale `24.04.2` that the module had moved past, so nothing named it. Enumerate what the host actually mounted instead of trusting the default: `awk '$3 == "iso9660" { print $2 }' /etc/fstab`.
+
+* Added `puppetlabs-mount_core` to `.fixtures.yml`. ⚠ `mount` is a **core type that has lived in a module since Puppet 6**: it is bundled in AIO so `pxe::ubuntu`'s mount resource works on a real host, but it is absent from the rspec fixture environment, where it fails with `Unknown resource type: 'mount'`. Same trap as `yumrepo_core`, and as `cron_core` elsewhere. It is **not** a metadata dependency, and it had never surfaced because no spec compiled `pxe::ubuntu`.
+
+**Known Issues**

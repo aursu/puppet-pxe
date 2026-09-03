@@ -36,6 +36,34 @@
 # @param storage_directory Storage root to delete.
 # @param tftp_root TFTP root to delete.
 # @param iso_root Root under which this module mounts installer ISOs.
+#
+# @param iso_mounts
+#   Installer ISO mount points to retire, declared as `mount` resources with
+#   `ensure => absent`.
+#
+#   ⚠⚠ **`umount` is not the inverse of a `mount` resource, and getting this
+#   wrong makes a host unbootable.** `pxe::ubuntu` declares these with
+#   `ensure => mounted`, which writes an `/etc/fstab` entry *as well as*
+#   mounting. Unmounting drops the mount and leaves the entry behind, pointing
+#   at an ISO file this class then deletes. The host survives until its next
+#   restart and then fails `local-fs.target` and drops to **emergency mode** -
+#   measured on a GitLab host that had been decommissioned cleanly, passed
+#   every check, and then did not come back from a reboot two days later, with
+#   no console available to recover it.
+#
+#   `ensure => absent` unmounts **and** removes the fstab entry, which is the
+#   actual inverse. It is a no-op where the mount point was never used.
+#
+#   ⚠ **The default only covers the releases this module currently tracks.** A
+#   host that mounted a release the module has since moved past keeps an fstab
+#   entry nothing here names, which is exactly the state described above - the
+#   host in question had both `24.04.3` and a stale `24.04.2`. **Enumerate what
+#   the host actually mounted**, from its `fstab`, rather than trusting this
+#   default:
+#
+#   ```
+#   awk '$3 == "iso9660" { print $2 }' /etc/fstab
+#   ```
 # @param packages
 #   Explicit package list, replacing everything the flags above derive. Use it
 #   when a host installed something under a non-default name.
@@ -57,6 +85,10 @@ class pxe::decommission (
   Stdlib::Unixpath $storage_directory = $pxe::params::storage_directory,
   Optional[Stdlib::Unixpath] $tftp_root = $pxe::params::tftp_root,
   Stdlib::Unixpath $iso_root = '/mnt/iso',
+  Array[Stdlib::Unixpath] $iso_mounts = [
+    "${iso_root}/ubuntu/${pxe::params::ubuntu22_current_version}",
+    "${iso_root}/ubuntu/${pxe::params::ubuntu24_current_version}",
+  ],
   Optional[Array[String[1]]] $packages = undef,
 ) inherits pxe::params {
   include bsys::params
@@ -133,14 +165,18 @@ class pxe::decommission (
     # Unmount first. pxe::ubuntu mounts installer ISOs under iso_root, and the
     # ISO files themselves live inside the storage directory - deleting either
     # while still mounted leaves the host with stale mounts.
-    $mounted_below = "findmnt --raw --noheadings --output TARGET | grep '^${iso_root}'"
-
-    exec { 'pxe::decommission unmount ISOs':
-      # Deepest first, so nested mounts unmount cleanly.
-      command => "${mounted_below} | sort --reverse | xargs --no-run-if-empty --max-args=1 umount",
-      onlyif  => "${mounted_below} | grep --quiet .",
-      path    => ['/usr/bin', '/bin', '/usr/sbin', '/sbin'],
-      tag     => ['pxe_decommission_umount'],
+    # The inverse of pxe::ubuntu's `mount { ensure => mounted }`, and it must be
+    # a mount resource rather than a umount: `ensure => absent` removes the
+    # /etc/fstab entry as well as unmounting. See @param iso_mounts for what
+    # leaving the entry behind costs.
+    #
+    # Ordered before the removal execs below, because the ISO files these
+    # mounts read from live inside the storage tree those execs delete.
+    $iso_mounts.each |Stdlib::Unixpath $iso_mount| {
+      mount { $iso_mount:
+        ensure => absent,
+        tag    => ['pxe_decommission_umount'],
+      }
     }
 
     # `rm -rf` rather than a recursive file resource: these trees hold
@@ -156,7 +192,7 @@ class pxe::decommission (
     }
 
     Package<| tag == 'pxe_decommission_package' |>
-    -> Exec<| tag == 'pxe_decommission_umount' |>
+    -> Mount<| tag == 'pxe_decommission_umount' |>
     -> Exec<| tag == 'pxe_decommission_remove' |>
   }
 }
